@@ -1,0 +1,72 @@
+{
+  "name": "marpe_online_procument_clientside",
+  "version": "0.0.1",
+  "description": "Responsive ecommerce web application that feeds from 1688 products",
+  "author": "zubbey <com.zubbey@hotmail.com>",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "start": "node server.js",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "bootstrap": "^4.5.0",
+    "bootstrap-vue": "^2.15.0",
+    "chart.js": "^2.9.3",
+    "express": "^4.16.4",
+    "hchs-vue-charts": "^1.2.8",
+    "jquery": "^3.5.1",
+    "mdbvue": "^6.7.1",
+    "nprogress": "^0.2.0",
+    "popper.js": "^1.16.1",
+    "sweetalert": "^2.1.2",
+    "v-viewer": "^1.5.1",
+    "vue": "^2.5.17",
+    "vue-bootstrap4-table": "^1.1.11",
+    "vue-chartjs": "^3.5.0",
+    "vue-google-charts": "^0.3.3",
+    "vue-jwt-decode": "^0.1.0",
+    "vue-router": "^3.0.1",
+    "vue-slider-component": "^2.8.0",
+    "vuejs-logger": "1.5.4",
+    "vuelidate": "^0.7.5",
+    "vuex": "^3.0.1",
+    "vuex-persistedstate": "^2.5.4"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.1.1",
+    "@vue/cli-plugin-eslint": "^3.1.5",
+    "@vue/cli-service": "^3.1.4",
+    "vue-template-compiler": "^2.5.17",
+    "webpack-cli": "^3.1.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {
+      "no-console": "off",
+      "vue/no-unused-vars": "off"
+    },
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
