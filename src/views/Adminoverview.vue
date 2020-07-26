@@ -16,7 +16,7 @@
               </b-iconstack>
             </div>
             <h3>{{ totalUsers }}</h3>
-            <b-card-footer>
+            <b-card-footer style="background-color: rgba(0,0,0,.03) !important">
               <span class="float-left">View Customers</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
@@ -35,8 +35,8 @@
                 <b-icon stacked icon="cart3" scale="0.5"></b-icon>
               </b-iconstack>
             </div>
-            <h3>0</h3>
-            <b-card-footer>
+            <h3>{{ totalOrders }}</h3>
+            <b-card-footer style="background-color: rgba(0,0,0,.03) !important">
               <span class="float-left">View Orders</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
@@ -56,7 +56,7 @@
               </b-iconstack>
             </div>
             <h3>{{ totalProducts }}</h3>
-            <b-card-footer>
+            <b-card-footer style="background-color: rgba(0,0,0,.03) !important">
               <span class="float-left">View Products</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
@@ -76,7 +76,7 @@
               </b-iconstack>
             </div>
             <h3>$0.00</h3>
-            <b-card-footer>
+            <b-card-footer style="background-color: rgba(0,0,0,.03) !important">
               <small class="float-left">View Revenue</small>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
@@ -238,7 +238,7 @@ export default {
   },
   computed: {
     ...mapState(["user", "log", "cart"]),
-    ...mapGetters(["registerd", "totalUsers", "totalProducts", "referredUsers"]),
+    ...mapGetters(["registerd", "totalUsers", "totalProducts", "referredUsers", "totalOrders"]),
     chartOptions () {
       if (!this.chartsLib) return null
       return this.chartsLib.charts.Bar.convertOptions({

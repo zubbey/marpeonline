@@ -1,29 +1,6 @@
 <template>
   <div class="content-wrapper" ref="contentWrapper">
-    <b-container fluid>
-      <Breadcrumb :items="items" :id="user.slug" />
-      <table class="table table-bordered table-responsive table-striped example1">
-        <thead>
-          <tr>
-            <th>Item details</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(order, index) in orders" :key="index">
-            <td>{{ order.amount }}</td>
-            <td>{{ order._id }}</td>
-            <td>
-              <img :src="'{{ url() }}/' + cart.product.thumbnail" width="150px" />
-            </td>
-            <td>Edit | Delete</td>
-          </tr>
-        </tbody>
-      </table>
-    </b-container>
-
+    <router-view />
     <Footer />
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
@@ -44,40 +21,29 @@ export default {
   },
   data() {
     return {
-      items: [
-        {
-          text: "Dashboard",
-          href: "/user/" + this.id + "/"
-        },
-        {
-          text: "Domestic Shipping Request",
-          href: "/user/" + this.id + "/#shippingRequest"
-        },
-        {
-          text: "Only Purchase Order",
-          href: "/user/" + this.id + "/#orderPurchase"
-        },
-        {
-          text: "Only Shipping Order",
-          href: "/user/" + this.id + "/#shippingOrder"
-        },
-        {
-          text: "Purchase And Shipping",
-          href: "/user/" + this.id + "/#PurchaseShipping"
-        },
-        {
-          text: "Shipping Checkout",
-          href: "/user/" + this.id + "/#checkout"
-        }
-      ]
-    };
+      mainProps: {
+        center: true,
+        fluidGrow: true,
+        blank: true,
+        blankColor: "#eee",
+        width: 600,
+        height: 400,
+        class: ""
+      }
+    }
   },
-  mounted() {
-    console.log(this.orders[0].cart);
+  watch: {
+    $route(to, from) {
+      console.clear(from);
+      if (to.path === `/user/${this.$store.state.user.slug}/orders/domestic?listorders=true`) {
+        location.reload();
+      }
+    }
   },
   computed: {
     ...mapState(["log", "user", "orders"])
   }
+  
 };
 </script>
 

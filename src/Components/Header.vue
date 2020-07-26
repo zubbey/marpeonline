@@ -1,6 +1,22 @@
 <template>
   <div class="container-flex">
-    <nav class="navbar navbar-light">
+    <div class="utility-nav d-none d-md-block">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-6">
+            <p class="small">
+              <b-icon icon="envelope"></b-icon>support@marpe.online |
+              <b-icon icon="phone"></b-icon>+234 812 377 1335
+            </p>
+          </div>
+
+          <div class="col-12 col-md-6 text-right">
+            <p class="small">Free shipping on total of {{ 1000 | toCurrency }} of all products</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="navbar navbar-light" style="z-index: 5000">
       <div class="dropdown d-xl-none d-lg-none mr-auto">
         <img
           src="https://img.icons8.com/ios-filled/50/000000/menu.png"
@@ -12,11 +28,12 @@
         />
         <div class="dropdown-menu hb" aria-labelledby="navd">
           <router-link class="dropdown-item" to="/">Home</router-link>
-          <router-link class="dropdown-item" to="/service_fee">Service fee</router-link>
-          <router-link class="dropdown-item" to="/cost_convert">Cost converter</router-link>
-          <router-link class="dropdown-item" to="/track_items">Track items</router-link>
+          <router-link class="dropdown-item" to="/servicefee">Service fee</router-link>
+          <router-link class="dropdown-item" to="/costcalculator">Cost converter</router-link>
+          <router-link class="dropdown-item" to="/exchangerate">Exchange rate</router-link>
+          <router-link class="dropdown-item" to="/trackitems">Track items</router-link>
+          <a class="dropdown-item" href="https://procurement.marpe.online/blog" target="_blank">Blog</a>
           <router-link class="dropdown-item" to="/contact">Contact us</router-link>
-          <router-link class="dropdown-item" to="/faqs">Faqs</router-link>
         </div>
       </div>
       <!--Logo-->
@@ -26,17 +43,34 @@
       <!--Header navigation-->
       <span class="navbar-item bc d-none d-xl-block d-lg-block py-0">
         <router-link class="pl-5" to="/">Home</router-link>
-        <router-link class="px-4" to="/service_fee">Service fee</router-link>
-        <router-link class="px-3" to="/cost_convert">Cost converter</router-link>
-        <router-link class="px-3" to="/track_items">Track items</router-link>
+        <router-link class="px-4" to="/servicefee">Service fee</router-link>
+        <router-link class="px-3" to="/costcalculator">Cost Calculator</router-link>
+        <router-link class="px-3" to="/exchangerate">Excharge Rate</router-link>
+        <router-link class="px-3" to="/trackitems">Track items</router-link>
+        <a class="px-3" href="https://procurement.marpe.online/blog" target="_blank">Blog</a>
         <router-link class="px-3" to="/contact">Contact us</router-link>
-        <router-link class="px-3" to="/faqs">Faqs</router-link>
       </span>
 
       <p class="navbar-item ml-auto"></p>
-      <div class="searc d-none d-xl-block d-lg-block pr-3">
-        <input type="search" class="search" />
-      </div>
+      <li class="nav-item dropdown">
+        <div
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >{{currencyType.name}}</div>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <div
+            v-for="(currency, index) in settings.currencyType"
+            :key="index"
+            class="dropdown-item"
+            @click="changeCurrency(currency.currency)"
+          >{{ currency.name }}</div>
+        </div>
+      </li>
       <div v-if="!log.isUserActive" class="user">
         <div class="nav-item dropdown">
           <div
@@ -48,21 +82,25 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <b-icon icon="person"></b-icon> Account
+            <b-icon icon="person"></b-icon>
+            <content-placeholders v-if="log.loading">
+              <content-placeholders-text :lines="1" style="width: 80px" />
+            </content-placeholders>
+            <span v-if="!log.loading">Account</span>
           </div>
           <div
             class="dropdown-menu dropdown-menu-right"
-            style="background-color: transparent; border: none"
+            style="background-color: transparent; border: none:"
             aria-labelledby="navbarDropdownMenuLink"
           >
             <div class="card bg-white">
               <div class="card-text text-center pt-3">Welcome to Marpe online</div>
               <div class="card-body d-flix" style="justify-content: space-between">
-                <router-link to="/login">
-                  <button type="button" class="btn btn-outline-secondary btn-block btn-sm">Login</button>
+                <router-link to="/login" class="mb-2">
+                  <button type="button" class="btn btn-outline-dark btn-block btn-sm"> Login</button>
                 </router-link>
                 <router-link to="/register">
-                  <button type="button" class="btn btn-primary btn-block btn-sm m-0">Create Account</button>
+                  <button type="button" class="btn btn-primary btn-block btn-sm m-0"> Create Account</button>
                 </router-link>
               </div>
             </div>
@@ -90,62 +128,64 @@
             aria-labelledby="navbarDropdownMenuLink"
           >
             <div class="card bg-white p-3">
-              <router-link :to="`user/${user.slug}/overview`">
-                <button type="button" class="btn btn-outline-secondary btn-block btn-sm">
+              <router-link :to="`/user/${user.slug}/overview?welcome=true`" class="mb-2">
+                <button type="button" class="btn btn-outline-dark btn-block btn-sm">
                   <b-icon icon="grid1x2"></b-icon> Dashboard
                 </button>
               </router-link>
-              <button type="button" class="btn btn-outline-secondary btn-block btn-sm">
-                <b-icon icon="heart"></b-icon> My Wishlist
+              <router-link :to="`/user/${user.slug}/wishlist`" class="mb-2">
+                <button type="button" class="btn btn-outline-dark btn-block btn-sm">
+                  <b-icon icon="heart"></b-icon> My Wishlist
+                </button>
+              </router-link>
+              <button type="submit" class="btn btn-outline-dark btn-block btn-sm" @click="logout">
+                <b-icon icon="power"></b-icon> Logout
               </button>
-              <button
-                type="submit"
-                class="btn btn-outline-secondary btn-block btn-sm"
-                @click="logout"
-              >Logout</button>
             </div>
           </div>
         </div>
       </div>
 
       <div class="bag" @click="openCart">
-      <div class="pb-1">
-        <b-icon icon="cart3" font-scale="2"></b-icon>
-      </div>
-        <span class="mb-3" v-if="this.cartItemCount > 0">{{ cartItemCount }}</span>
+        <div class="pb-1">
+          <b-icon icon="cart3" font-scale="2"></b-icon>
+        </div>
+        <span class="mb-3" v-if="cart.length > 0">{{ cart.length }}</span>
       </div>
     </nav>
 
     <!--Cart Component-->
-    <Cart ref="cartMove" />
+    <sideCart ref="cartMove" />
   </div>
 </template>
 
 <script>
 // import * as $ from "jquery";
 
-import Cart from "@/Components/Cart.vue";
+import sideCart from "@/Components/Cart.vue";
 import { mapState } from "vuex";
 
 export default {
   name: "Header",
   components: {
-    Cart
+    sideCart,
   },
   data() {
     return {
-      comfirmPassword: ""
+      comfirmPassword: "",
     };
   },
-  mounted() {},
   computed: {
-    ...mapState(["user", "log"]),
-
-    cartItemCount() {
-      return this.$store.getters.cartItemCount;
-    }
+    ...mapState(['user', 'cart', 'log', 'settings', 'currencyType'])
   },
   methods: {
+    changeCurrency(newCurrency) {
+      let currentCurrency = this.currencyType.currency;
+      this.$store
+        .dispatch("changeCurrency", { newCurrency, currentCurrency })
+        .then(data => this.$store.commit("CHANGE_CURRENCY", data))
+        .catch((error) => console.error(error));
+    },
     openCart() {
       this.$refs.cartMove.cartON();
     },
@@ -153,9 +193,10 @@ export default {
     logout() {
       this.$store.dispatch("logoutUser").then(() => {
         localStorage.removeItem("isAuthorized");
+        location.reload();
       });
     }
-  }
+  },
 };
 </script>
 
@@ -163,43 +204,53 @@ export default {
 .body {
   background: #f9f9f9 !important;
 }
-a {
-  color: #ea5376 !important;
+.dropdown,
+.dropleft,
+.dropright,
+.dropup {
+  list-style: none !important;
+}
+a:hover {
+  color: #000 !important;
 }
 a:hover {
   text-decoration: none !important;
   color: #b83658 !important;
 }
-.btn-primary.focus, .btn-primary:focus{
+.btn-primary.focus,
+.btn-primary:focus {
   box-shadow: none;
   transform: scale(0.9);
 }
 .navbar-item.bc a {
-    font-size: 15px;
-    text-decoration: none !important;
-    color: black !important;
+  font-size: 15px;
+  text-decoration: none !important;
+  color: black !important;
 }
-.outline, .btn-outline{
+.outline,
+.btn-outline {
   padding: 10px !important;
   border-radius: 6px !important;
   color: #ea5376;
-  border:1px solid #ea5376 !important;
+  border: 1px solid #ea5376 !important;
 }
-.btn-outline:hover{
+.btn-outline:hover {
   color: #ea5376;
-  border:1px solid #ea5376 !important;
+  border: 1px solid #ea5376 !important;
   background: rgba(234, 83, 118, 0.11) !important;
 }
-.btn-primary{
+.btn-primary {
   padding: 10px !important;
   border-radius: 6px !important;
   background-color: #ea5376 !important;
   border: none !important;
 }
-.btn-primary:hover, .primary:hover{
+.btn-primary:hover,
+.primary:hover {
   box-shadow: 0 8px 25px -8px #ea5376 !important;
 }
-.btn-primary:focus, .primary:focus{
+.btn-primary:focus,
+.primary:focus {
   box-shadow: 0 1px 20px 1px #ea5376 !important;
 }
 .btn-outline-dark {
@@ -213,7 +264,7 @@ a:hover {
 }
 .form-control:focus {
   border-color: #ea5376 !important;
-  box-shadow: 0 1px 20px 1px #ea5376 !important;
+  box-shadow: none !important;
 }
 .alert {
   padding: 0.3rem 0.8rem !important;
@@ -225,18 +276,18 @@ nav {
   z-index: 100;
 }
 .navbar {
-  box-shadow: 0 1px 20px 1px #dcdcdc !important;
+  box-shadow: 0 1px 1px 1px #dcdcdc !important;
   background-color: #fff;
 }
 .navbar .dropdown-menu {
-    position: absolute !important;
-    margin-top: 2rem;
+  position: absolute !important;
+  margin-top: 2rem;
 }
-.navbar .dropdown-menu a{
+.navbar .dropdown-menu a {
   padding: 0 !important;
 }
 .btn-light.dropdown-toggle {
-    background-color: white !important;
+  background-color: white !important;
 }
 .close {
   position: relative;
@@ -259,34 +310,6 @@ nav {
 .btn-sm {
   border-radius: 8px;
 }
-.search {
-  outline: none;
-  border: 1px #f8f8f8;
-  background: #ededed url("../assets/search.png") no-repeat 5px center;
-  padding: 5px 8px 0px 26px;
-  width: 10px;
-  -webkit-border-radius: 10em;
-  -moz-border-radius: 10em;
-  border-radius: 10em;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  transition: all 0.5s;
-  margin-right: 10px;
-}
-
-.search:focus {
-  width: 100%;
-  min-width: 50px;
-  border: solid 1px #ccc;
-  background-color: #fff;
-  border-color: #98ccfd;
-  -webkit-box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
-  -moz-box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
-  box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
-  backface-visibility: hidden;
-  perspective: 1000;
-}
-
 form .btn-xl.btn-success.mt-3 {
   position: relative;
   -webkit-transition-duration: 100ms;

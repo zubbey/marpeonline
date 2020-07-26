@@ -3,7 +3,9 @@
     <b-container fluid>
       <Breadcrumb :items="items" :id="user.slug" />
 
-      <b-row>
+      <b-card title="COMING SOON!" sub-title="work in progress" class="text-center py-5">
+      </b-card>
+      <!-- <b-row>
         <b-col>
           <b-card title="My Wallet" sub-title="Account Balance" class="text-center py-5">
             <b-card-text>
@@ -30,7 +32,7 @@
             ></b-table>
           </b-card>
         </b-col>
-      </b-row>
+      </b-row> -->
     </b-container>
     <Footer />
     <!-- Scroll to Top Button-->
@@ -120,41 +122,6 @@ export default {
         }
       ],
       transactions: [
-        {
-          date: new Date().toLocaleDateString(),
-          type: "Withdrawal",
-          status: "Approved",
-          details: "Mastercard transfer...0922",
-          amount: 1000
-        },
-        {
-          date: new Date().toLocaleDateString(),
-          type: "Withdrawal",
-          status: "Approved",
-          details: "Mastercard transfer...2102",
-          amount: 500
-        },
-        {
-          date: new Date().toLocaleDateString(),
-          type: "Deposit",
-          status: "Approved",
-          details: "Transfered from wal...0922",
-          amount: 20000
-        },
-        {
-          date: new Date().toLocaleDateString(),
-          type: "Withdrawal",
-          status: "Approved",
-          details: "Mastercard transfer...0922",
-          amount: 1000
-        },
-        {
-          date: new Date().toLocaleDateString(),
-          type: "Deposit",
-          status: "Pending",
-          details: "Mastercard transfer...0922",
-          amount: 12000
-        },
         {
           date: new Date().toLocaleDateString(),
           type: "Withdrawal",

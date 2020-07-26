@@ -9,5 +9,8 @@ export default {
     },
     single(slug){
         return Api(`product/${slug}`)
+    },
+    searchedKeyword(keyword, category){
+        return Api(`products?q=${keyword}&category=${category}`)
     }
 }

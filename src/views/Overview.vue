@@ -16,7 +16,7 @@
               </b-iconstack>
             </div>
             <h1>$0.00</h1>
-            <b-card-footer>
+            <b-card-footer style="background-color: rgba(0,0,0,.03) !important">
               <span class="float-left">View Wallet</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
@@ -37,7 +37,7 @@
               </b-iconstack>
             </div>
             <h1>{{ totalAffiliatePoint }}%</h1>
-            <b-card-footer>
+            <b-card-footer style="background-color: rgba(0,0,0,.03) !important">
               <span class="float-left">View Transactions</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
@@ -302,11 +302,11 @@ export default {
         zip: null,
         shippingaddress: ""
       },
-      country: [{ text: "Select Country", value: null }],
+      country: [],
       show: true
     };
   },
-  mounted() {
+  created() {
     (this.form = {
       address: this.user.address,
       city: this.user.city,

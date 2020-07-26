@@ -17,6 +17,46 @@ export default {
         return Api.get('user/orders/', { headers: { 'Authorization': `Bearer ${token}`} })
     },
 
+    addPurchaseOrder(data){
+        return Api.post('users/purchaseorder/', data)
+    },
+
+    purchaseOrder(token){
+        return Api.get('user/purchaseorder/', { headers: { 'Authorization': `Bearer ${token}`} })
+    },
+
+    placepurchaseorder(token, id, data){
+        return Api.patch(`user/purchaseorder/${id}`, data, { headers: { 'Authorization': `Bearer ${token}`} })
+    },
+
+    deletepurchase(token, id){
+        return Api.delete(`user/purchaseorder/${id}`, { headers: { 'Authorization': `Bearer ${token}`} })
+    },
+
+    // ONLY PURCHASE
+
+    addOnlyPurchase(token, data){
+        return Api.post('users/onlypurchase/', data, { headers: { 'Authorization': `Bearer ${token}`} } )
+    },
+
+    onlyPurchase(token){
+        return Api.get('user/onlypurchase/', { headers: { 'Authorization': `Bearer ${token}`} })
+    },
+
+    onlyPayment(token){
+        return Api.get('user/onlypayment/', { headers: { 'Authorization': `Bearer ${token}`} })
+    },
+
+    placeOnlypurchaseOrder(token, id, data){
+        return Api.patch(`user/onlypurchase/${id}`, data, { headers: { 'Authorization': `Bearer ${token}`} })
+    },
+
+    deleteOnlyPurchase(token, id){
+        return Api.delete(`user/onlypurchase/${id}`, { headers: { 'Authorization': `Bearer ${token}`} })
+    },
+
+    // UPDATE USER
+
     updateUserInfo(token, data){
         return Api.patch('user/info/', data, { headers: { 'Authorization': `Bearer ${token}`} })
     },

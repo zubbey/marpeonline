@@ -4,12 +4,12 @@
       <div class="cart-menu">
         <div class="d-flex justify-content-between pt-4">
             <h5><strong>Cart</strong></h5>
-            <button class="btn btn-outline-secondary" @click.prevent="emptyCart()"><i class="fa fa-remove"></i> Empty</button>
+            <button class="btn btn-outline-light btn-sm" @click.prevent="emptyCart()"><i class="fa fa-remove"></i> Empty</button>
         </div>
         <hr>
 
         <transition name="fade" tag="div">
-          <div v-if="this.cart.length === 0" class="text-center font-italic">
+          <div v-if="cart.length < 0" class="text-center font-italic">
             Your cart is empty, try to Add stuff.
           </div>
         </transition>
@@ -94,7 +94,7 @@ export default {
 /* Modal Overlay */
 .modal {
   display: block;
-  z-index: 1050;
+  z-index: 9999;
   position: fixed;
   top: 0;
   left: 0;
@@ -124,7 +124,7 @@ export default {
   height: 100%;
   background: #401821;
   overflow-y: auto;
-  z-index:1051;
+  z-index:10000;
   -webkit-overflow-scrolling: touch;
   transform: translateX(360px);
   transition-property: transform;
@@ -161,5 +161,10 @@ border-color: rgba(255, 255, 255, 0.3);
 .remove-btn:hover {
   background-color: grey;
 }
-
+.btn-primary.focus, .btn-primary:focus{
+  color: #FFF !important;
+}
+.btn-primary:not([disabled]):not(.disabled):active, .btn-primary:not([disabled]):not(.disabled).active, .show>.btn-primary.dropdown-toggle{
+  background-color: rgb(255 255 255 / 5%) !important;
+}
 </style>

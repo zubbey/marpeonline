@@ -19,22 +19,19 @@
         <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
           <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Dashboard">
           <router-link :to="`/admin/${user.slug}/overview`" class="nav-link">
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="grid1x2"></b-icon></b-badge>
-              <span class="nav-link-text">Overview</span>
+                <b-icon icon="grid1x2"></b-icon><span class="nav-link-text"> Overview</span>
           </router-link>
           </li>
 
           <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Referral">
           <router-link :to="`/admin/${user.slug}/users`" class="nav-link">
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="person-plus"></b-icon></b-badge>
-              <span class="nav-link-text">User Management</span>
+              <b-icon icon="person-plus"></b-icon><span class="nav-link-text"> User Management</span>
           </router-link>
           </li>
 
           <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Referral">
           <router-link :to="`/admin/${user.slug}/products`" class="nav-link">
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="person-plus"></b-icon></b-badge>
-              <span class="nav-link-text">Products</span>
+              <b-icon icon="person-plus"></b-icon><span class="nav-link-text"> Products</span>
           </router-link>
           </li>
 
@@ -46,8 +43,7 @@
               href="#collapseComponents"
               data-parent="#exampleAccordion"
             >
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="cart3"></b-icon></b-badge>
-              <span class="nav-link-text">Order Management</span>
+              <b-icon icon="cart3"></b-icon><span class="nav-link-text"> Order Management</span>
             </a>
             <ul class="sidenav-second-level collapse" id="collapseComponents">
               <li class="nav-link">
@@ -77,8 +73,7 @@
               href="#collapseMulti"
               data-parent="#exampleAccordion"
             >
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="gear"></b-icon></b-badge>
-              <span class="nav-link-text">Account Setting</span>
+              <b-icon icon="gear"></b-icon><span class="nav-link-text"> Account Setting</span>
             </a>
             <ul class="sidenav-second-level collapse" id="collapseMulti">
               <li class="nav-link">
@@ -104,8 +99,7 @@
           </router-link>
           <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Logout">
             <a class="nav-link" @click.prevent="logout">
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="power"></b-icon></b-badge>
-              <span class="nav-link-text">Logout</span>
+              <b-icon icon="power"></b-icon><span class="nav-link-text"> Logout</span>
             </a>
           </li>
         </ul>
@@ -155,16 +149,7 @@
             </div>
           </li>
           <li class="nav-item">
-            <form class="form-inline my-2 my-lg-0 mr-lg-2">
-              <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search anything..." />
-                <span class="input-group-append">
-                  <b-button variant="primary" type="button" style="padding: 0px 10px !important;">
-                    <b-icon icon="search"></b-icon>
-                  </b-button>
-                </span>
-              </div>
-            </form>
+            <a class="nav-link" ><b-icon icon="person"></b-icon><strong> {{ fullname ? user.email : '' }}</strong></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click.prevent="logout">
@@ -180,25 +165,16 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   props: ["id", "user", "log", "cart"],
   computed: {
-    cartItemCount() {
-      return this.$store.getters.cartItemCount;
-    }
+    ...mapGetters(["fullname"])
   },
   mounted(){
-    this.getAllData({
-      accessToken: localStorage.getItem('accessToken')
-    })
-    .then(data => {
-      this.$store.commit('SET_DATA', data)
-    })
-    .catch(error => console.log(error))
   },
   methods: {
-    ...mapActions(["removeCartItem", "getAllData"]),
+    ...mapActions(["removeCartItem"]),
 
     logout() {
       this.$store.dispatch("logoutUser").then(() => {
@@ -222,5 +198,8 @@ ul#exampleAccordion {
 }
 #mainNav .navbar-collapse .navbar-sidenav .sidenav-second-level > li > a{
   color: #ffe7e7 !important;
+}
+.navbar .dropdown-menu {
+    position: absolute !important;
 }
 </style>

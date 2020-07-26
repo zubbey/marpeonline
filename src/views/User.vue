@@ -15,10 +15,22 @@ export default {
   components: {
     Userheader
   },
-  computed: {
-    ...mapState(["user", "log", "cart"]),
+  created() {
+    if(this.id !== this.user.slug){
+      this.$router.push('/?redirect=403')
+    }
   },
-  methods: {}
+  computed: {
+    ...mapState(["user", "log", "cart"])
+  },
+  methods: {
+    isEmpty(obj) {
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) return false;
+      }
+      return true;
+    }
+  }
 };
 </script>
 
@@ -57,28 +69,47 @@ a {
 a:hover {
   text-decoration: none !important;
 }
-*{
-  font-size: .98rem;
+* {
+  font-size: 0.98rem;
 }
-.btn-primary.focus, .btn-outline:focus, .btn-primary:focus{
+li.breadcrumb-item a {
+  font-size: 0.8em !important;
+}
+li.breadcrumb-item .active::before {
+  font-size: 0.8em !important;
+}
+.breadcrumb-item.active {
+  color: #ea5376 !important;
+}
+.btn {
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+.btn-primary.focus,
+.btn-outline:focus,
+.btn-primary:focus {
   box-shadow: none;
   transform: scale(0.9);
 }
-.badge-primary{
-  background-color:#ea5376 !important;
+.badge {
+  box-shadow: none !important;
 }
-.text-primary{
+.badge-primary {
+  background-color: #ea5376 !important;
+}
+.text-primary {
   color: #ea5376 !important;
 }
 .router-link-active {
   border-radius: 6px;
-    background: #ea5376;
+  background: #ededed;
 }
-.router-link-active span{
-    color: #FFF;
+.router-link-active span {
+  color: #ea5376;
+  font-weight: 600;
 }
-.router-link-active .fa-fw{
-    color: #FFF;
+.router-link-active .fa-fw {
+  color: #fff;
 }
 .form-control:focus {
   border-color: #ea5376 !important;
@@ -91,48 +122,55 @@ a:hover {
 .form-control {
   font-size: 0.9rem;
 }
-.outline, .btn-outline{
+.outline,
+.btn-outline {
   padding: 10px !important;
   border-radius: 6px !important;
   color: #ea5376;
-  border:1px solid #ea5376 !important;
+  border: 1px solid #ea5376 !important;
 }
-.btn-outline:hover{
+.btn-outline:hover {
   color: #ea5376;
-  border:1px solid #ea5376 !important;
+  border: 1px solid #ea5376 !important;
   background: rgba(234, 83, 118, 0.11) !important;
 }
-.btn-primary{
+.btn-primary {
   padding: 10px !important;
   border-radius: 6px !important;
   background-color: #ea5376 !important;
   border: none !important;
 }
-.btn-primary:hover, .primary:hover{
+.btn-primary:hover,
+.primary:hover {
   box-shadow: 0 8px 25px -8px #ea5376 !important;
 }
-.page-item.active .page-link{
+.page-item.active .page-link {
   background-color: #ea5376 !important;
-    border: none !important;
+  border: none !important;
 }
 .alert-info {
-    color: #2088ab !important;
-    background-color: rgba(209, 236, 241, 0.15) !important;
-    border: none !important;
+  color: #2088ab !important;
+  background-color: rgba(209, 236, 241, 0.15) !important;
+  border: none !important;
 }
-.card{
+.card {
   box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   border: none;
 }
 .card-header {
+  background-color: #FFF !important;
   border-bottom: 1px solid #f9fafb !important;
 }
+.card-footer{
+  background-color: #FFF !important;
+}
 .navbar {
-  background: #FFF;
+  background: #fff;
   box-shadow: 0 1px 20px 1px #dcdcdc !important;
 }
-.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
   border: none;
 }
 .table thead th {
@@ -189,11 +227,16 @@ a:hover {
 .z-1 {
   z-index: 1;
 }
-.input-group-lg>.custom-select, .input-group-lg>.form-control, .input-group-lg>.input-group-append>.btn, .input-group-lg>.input-group-append>.input-group-text, .input-group-lg>.input-group-prepend>.btn, .input-group-lg>.input-group-prepend>.input-group-text{
+.input-group-lg > .custom-select,
+.input-group-lg > .form-control,
+.input-group-lg > .input-group-append > .btn,
+.input-group-lg > .input-group-append > .input-group-text,
+.input-group-lg > .input-group-prepend > .btn,
+.input-group-lg > .input-group-prepend > .input-group-text {
   border-radius: 10rem;
 }
 #mainNav .navbar-collapse .navbar-sidenav > .nav-item > .nav-link {
-    padding: 0.85em 8px !important;
+  padding: 0.85em 8px !important;
 }
 #mainNav .navbar-collapse {
   overflow: auto;
@@ -201,14 +244,13 @@ a:hover {
 }
 #mainNav .navbar-collapse .navbar-nav .nav-item .nav-link:focus,
 #mainNav .navbar-collapse .navbar-nav .nav-item .nav-link:hover,
-#mainNav .navbar-collapse .navbar-nav .nav-item .nav-link:visited
- {
-    padding-left: 1.0em !important;
-  transition: all .3s ease-out;
+#mainNav .navbar-collapse .navbar-nav .nav-item .nav-link:visited {
+  padding-left: 1em !important;
+  transition: all 0.3s ease-out;
 }
 #mainNav .navbar-collapse .navbar-nav .nav-item .nav-link {
   cursor: pointer;
-  transition: all .3s ease-out;
+  transition: all 0.3s ease-out;
 }
 
 #mainNav .navbar-collapse .navbar-sidenav .nav-link-collapse:after {
@@ -237,13 +279,13 @@ a:hover {
 #mainNav .navbar-collapse .navbar-sidenav .sidenav-third-level > li > a:focus,
 #mainNav .navbar-collapse .navbar-sidenav .sidenav-third-level > li > a:hover {
   text-decoration: none;
-  padding-left: 1.0em;
-  transition: all .3s ease-out;
+  padding-left: 0.8em;
+  transition: all 0.3s ease-out;
 }
 
 #mainNav .navbar-collapse .navbar-sidenav .sidenav-second-level > li > a {
-  padding-left: 1em;
-  transition: all .3s ease-in;
+  padding-left: 0.8em;
+  transition: all 0.3s ease-in;
 }
 
 #mainNav .navbar-collapse .navbar-sidenav .sidenav-third-level > li > a {
@@ -477,7 +519,7 @@ body.sidenav-toggled #mainNav.static-top #sidenavToggler i {
 
 .content-wrapper {
   overflow-x: hidden;
-  background: #F9F9F9;
+  background: #f9f9f9;
 }
 
 @media (min-width: 992px) {

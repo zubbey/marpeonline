@@ -13,88 +13,64 @@
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
-        <span class="navbar-toggler-icon"></span>
+        <!-- <span class="navbar-toggler-icon"></span> -->
+        <b-icon icon="three-dots-vertical"></b-icon>
+        <!-- <mdb-icon fab icon="bars" /> -->
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-          <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Dashboard">
+        <ul class="navbar-nav navbar-sidenav pt-3" id="exampleAccordion">
+          <li class="nav-item py-0" data-toggle="tooltip" data-placement="right" title="Dashboard">
           <router-link :to="`/user/${user.slug}/overview`" class="nav-link">
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="grid1x2"></b-icon></b-badge>
-              <span class="nav-link-text">Overview</span>
+              <b-icon icon="grid1x2"></b-icon> <span class="nav-link-text"> Overview</span>
           </router-link>
           </li>
 
-          <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Referral">
+          <li class="nav-item py-0" data-toggle="tooltip" data-placement="right" title="Referral">
           <router-link :to="`/user/${user.slug}/referral`" class="nav-link">
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="person-plus"></b-icon></b-badge>
-              <span class="nav-link-text">Affiliate/Referral Program</span>
+              <b-icon icon="person-plus"></b-icon> <span class="nav-link-text"> Affiliate/Referral Program</span>
+          </router-link>
+          </li>
+          <li class="nav-item py-0" data-toggle="tooltip" data-placement="right" title="Wallet">
+          <router-link :to="`/user/${user.slug}/wallet`" class="nav-link">
+              <b-icon icon="credit-card"></b-icon> <span class="nav-link-text"> My Wallet <b-badge variant="primary"> New</b-badge></span>
           </router-link>
           </li>
 
-          <router-link :to="`/user/${user.slug}/wallet`">
-          <li class="nav-item py-2" data-toggle="tooltip" data-placement="right" title="Wallet">
+          <router-link :to="`/user/${user.slug}/orders/domestic`">
+          <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Orders">
             <a
               class="nav-link nav-link-collapse collapsed"
               data-toggle="collapse"
               href="#collapseComponents"
               data-parent="#exampleAccordion"
             >
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="wallet2"></b-icon></b-badge>
-              <span class="nav-link-text"><b-badge variant="primary">New</b-badge> My Wallet</span>
+              <b-icon icon="cart3"></b-icon> <span class="nav-link-text"> Order Placement</span>
             </a>
             <ul class="sidenav-second-level collapse" id="collapseComponents">
               <li class="nav-link">
-                <a href="#">Account Balance</a>
+                <router-link to="domestic">Domestic Order</router-link>
               </li>
               <li class="nav-link">
-                <a href="#">Add Withdrawal Account</a>
+                <router-link to="onlypurchesed">Only Purchase Order</router-link>
               </li>
               <li class="nav-link">
-                <a href="#">Request Withdrawal</a>
-              </li>
-            </ul>
-          </li>
-          </router-link>
-          <router-link :to="`/user/${user.slug}/orders`">
-          <li class="nav-item py-2" data-toggle="tooltip" data-placement="right" title="Orders">
-            <a
-              class="nav-link nav-link-collapse collapsed"
-              data-toggle="collapse"
-              href="#collapseComponents"
-              data-parent="#exampleAccordion"
-            >
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="cart3"></b-icon></b-badge>
-              <span class="nav-link-text">Order Placement</span>
-            </a>
-            <ul class="sidenav-second-level collapse" id="collapseComponents">
-              <li class="nav-link">
-                <a href="#">Domestic Shipping Request</a>
+                <router-link to="onlyshipping">Only Shipping Order</router-link>
               </li>
               <li class="nav-link">
-                <a href="#">Only Purchase Order</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Only Shipping Order</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Purchase And Shipping</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Shipping Checkout</a>
+                <router-link to="purchaseshipping">Purchase And Shipping</router-link>
               </li>
             </ul>
           </li>
           </router-link>
           <router-link :to="`/user/${user.slug}/account_history`">
-          <li class="nav-item py-2" data-toggle="tooltip" data-placement="right" title="Account History">
+          <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Account History">
             <a
               class="nav-link nav-link-collapse collapsed"
               data-toggle="collapse"
               href="#collapseExamplePages"
               data-parent="#exampleAccordion"
             >
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="clock-history"></b-icon></b-badge>
-              <span class="nav-link-text">Account History</span>
+              <b-icon icon="clock-history"></b-icon> <span class="nav-link-text"> Account History</span>
             </a>
             <ul class="sidenav-second-level collapse" id="collapseExamplePages">
               <li class="nav-link">
@@ -113,15 +89,14 @@
           </li>
           </router-link>
           <router-link :to="`/user/${user.slug}/settings`">
-          <li class="nav-item py-2" data-toggle="tooltip" data-placement="right" title="Account Settings">
+          <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Account Settings">
             <a
               class="nav-link nav-link-collapse collapsed"
               data-toggle="collapse"
               href="#collapseMulti"
               data-parent="#exampleAccordion"
             >
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="gear"></b-icon></b-badge>
-              <span class="nav-link-text">Account Setting</span>
+              <b-icon icon="gear"></b-icon> <span class="nav-link-text"> Account Setting</span>
             </a>
             <ul class="sidenav-second-level collapse" id="collapseMulti">
               <li class="nav-link">
@@ -145,10 +120,9 @@
             </ul>
           </li>
           </router-link>
-          <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Logout">
+          <li class="nav-item py-0" data-toggle="tooltip" data-placement="right" title="Logout">
             <a class="nav-link" @click.prevent="logout">
-              <b-badge variant="dark p-2 mr-2"><b-icon icon="power"></b-icon></b-badge>
-              <span class="nav-link-text">Logout</span>
+              <b-icon icon="power"></b-icon> <span class="nav-link-text"> Logout</span>
             </a>
           </li>
         </ul>
@@ -171,26 +145,22 @@
               aria-expanded="false"
             >
               <b-icon icon="cart3"></b-icon>
-              <span v-if="this.cartItemCount > 0">
+              <span v-if="cart.length > 0">
                 Cart
                 <span
                   class="badge badge-pill badge-primary"
-                  v-if="this.cartItemCount > 0"
-                >{{ cartItemCount }}</span>
+                  v-if="cart.length  > 0"
+                >{{ cart.length  }}</span>
               </span>
               <!-- if cart is empty -->
-              <span v-if="this.cartItemCount == 0" class="indicator text-primaey d-none d-lg-block">
+              <span v-if="cart.length == 0" class="indicator text-primaey d-none d-lg-block">
                 <i class="fa fa-fw fa-circle"></i>
               </span>
             </a>
             <div class="dropdown-menu bg-white" aria-labelledby="alertsDropdown">
-              <h6
-                class="dropdown-header"
-                v-if="this.cart.length === 0"
-              >Your cart is empty, try to Add stuff.</h6>
               <div class="dropdown-divider"></div>
-              <transition-group name="fade" tag="div">
-                <div v-for="item in cart" :key="item._id">
+              <transition-group v-if="cart.length > 0" name="fade" tag="div">
+                <div v-for="item in cart" :key="item._id" class="p-3">
                   <router-link
                     :to="{name: 'Product', params: {id: item.product.slug}}"
                     class="dropdown-item bg-white"
@@ -202,10 +172,10 @@
                       </strong>
                     </span>
                     <div class="d-flex justify-content-between my-2">
-                      <span class="small text-primary">
+                      <span class="text-primary">
                         Price:
                         <strong>{{ item.product.price | toCurrency }}</strong>
-                        <div class="small text-primary">Qantity: <strong>{{ item.qty }}</strong></div>
+                        <div class="text-muted">Qantity: <strong>{{ item.qty }}</strong></div>
                       </span>
                       <b-icon
                       icon="x"
@@ -217,8 +187,8 @@
                   </router-link>
                 </div>
               </transition-group>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item small" href="#">View all Notification</a>
+
+              <h6 v-else class="dropdown-header">Your cart is empty, try to Add stuff.</h6>
             </div>
           </li>
 
@@ -259,16 +229,7 @@
             </div>
           </li>
           <li class="nav-item">
-            <form class="form-inline my-2 my-lg-0 mr-lg-2">
-              <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search anything..." />
-                <span class="input-group-append">
-                  <b-button variant="primary" type="button" style="padding: 0px 10px !important;">
-                    <b-icon icon="search"></b-icon>
-                  </b-button>
-                </span>
-              </div>
-            </form>
+            <a class="nav-link" ><b-icon icon="person"></b-icon><strong>{{ user.firstname }}</strong></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click.prevent="logout">
@@ -284,13 +245,12 @@
 </template>
 
 <script>
+import { mdbIcon } from 'mdbvue';
 import { mapActions } from "vuex";
 export default {
   props: ["user", "log", "cart"],
-  computed: {
-    cartItemCount() {
-      return this.$store.getters.cartItemCount;
-    }
+  components: {
+    mdbIcon
   },
   methods: {
     ...mapActions(["removeCartItem"]),
@@ -299,7 +259,7 @@ export default {
       this.$store.dispatch("logoutUser").then(() => {
           localStorage.removeItem('isAuthorized');
           localStorage.removeItem('accessToken');
-          window.location.reload();
+          location.reload();
         // this.$router.push("/");
       });
     }
@@ -311,11 +271,7 @@ export default {
 ul#exampleAccordion {
     overflow: scroll;
 }
-.badge-dark {
-    color: #3b3f43;
-    background-color: #343a401f;
-}
-#mainNav .navbar-collapse .navbar-sidenav .sidenav-second-level > li > a{
-  color: #ffe7e7 !important;
+.navbar .dropdown-menu {
+    position: absolute !important;
 }
 </style>

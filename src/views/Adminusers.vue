@@ -6,12 +6,13 @@
       <b-row>
         <b-col>
           <vue-bootstrap4-table
-            :rows="users"
+            :rows="adminData.users"
             :columns="columns"
             :classes="classes"
             :config="config"
             :actions="actions"
             @on-download="onDownload"
+            refresh-no
           >
             <template slot="sort-asc-icon">
               <i class="fas fa-sort-up"></i>
@@ -43,7 +44,7 @@ import VueBootstrap4Table from "vue-bootstrap4-table";
 import { mapState, mapGetters } from "vuex";
 export default {
   name: "users",
-  props: ["id", "users"],
+  props: ["id", "user"],
   components: {
     VueBootstrap4Table,
     Breadcrumb,
@@ -54,24 +55,15 @@ export default {
       breadcrumb: [
         {
           text: "Dashboard",
-          href: "/admin/" + this.users.slug + "/overview"
+          href: "/admin/" + this.id + "/overview"
         },
         {
           text: "Users",
-          href: "/admin/" + this.users.slug + "/users"
+          href: "/admin/" + this.id + "/users"
         }
       ],
       rows: [],
       columns: [
-        {
-          label: "id",
-          name: "_id",
-          filter: {
-            type: "simple",
-            placeholder: "Enter product id"
-          },
-          sort: true
-        },
         {
           label: "First Name",
           name: "firstname",
@@ -143,11 +135,13 @@ export default {
         cell: {
           "my-cell my-cell2": true,
           "text-success": function(row, column, cellValue) {
+            console.clear(cellValue);
             return (
               column.name == "affiliates.length" && row.affiliates.length > 0
             );
           },
           "text-danger": function(row, column, cellValue) {
+            console.clear(cellValue);
             return (
               column.name == "affiliates.length" && row.affiliates.length < 1
             );
@@ -173,7 +167,7 @@ export default {
   },
   mounted() {},
   computed: {
-    ...mapState(["user", "log", "cart"]),
+    ...mapState(["user", "adminData", "log", "cart"]),
     ...mapGetters(["fullname"])
   },
   methods: {

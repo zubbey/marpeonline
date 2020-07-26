@@ -1,27 +1,28 @@
 <template>
   <div>
-    <transition-group name="fade" class="row" tag="div">
+    <transition-group name="fade" class="row row-cols-1 row-cols-sm-2 row-cols-md-4" tag="div">
       <div
         v-for="product in CardArray"
+        class="col pb-3"
         :style="cardColumn"
-        class="col-6 col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xs-4 pb-3"
         :key="product._id"
       >
         <div class="card m-1">
-          <img class="card-img-top" :src="product.thumbnail" alt="Card image cap" />
+          
+          <b-img-lazy v-bind="mainProps" :src="product.thumbnail" alt="Card image" style="margin-bottom: 0 !important; margin-top: 0 !important;"></b-img-lazy>
           <div class="overlay">
             <b-button type="button" variant="primary" @click="addtoCart(product)">
-              <b-icon icon="cart3"></b-icon> Add to Cart
+              <b-icon icon="cart3"></b-icon>Add to Cart
             </b-button>
             <router-link :to="{name: 'Product', params: {id: product.slug}}">
               <b-button type="button" variant="outline">View Product</b-button>
             </router-link>
           </div>
-          <div class="card-body product-card">
-            <h6 class="card-title">{{ product.name }}</h6>
-            <p class="card-text color-primary">
+          <div class="card-body product-card text-left">
+            <h6 class="card-title">{{ product.name | truncate(18, '...')}}</h6>
+            <h4 class="card-text color-primary">
               <strong>{{ product.price | toCurrency }}</strong>
-            </p>
+            </h4>
           </div>
         </div>
       </div>
@@ -34,10 +35,22 @@ import { mapState, mapActions } from "vuex";
 export default {
   props: ["CardArray", "cardColumn"],
   name: "Card",
-  mounted() {
+  data() {
+    return {
+      mainProps: {
+        center: true,
+        fluidGrow: true,
+        blank: true,
+        blankColor: "#eee",
+        width: 600,
+        height: 400,
+        class: "my-5"
+      }
+    }
   },
+  mounted() {},
   computed: {
-    ...mapState(["currency", "user", "cart"])
+    ...mapState(["user", "cart"])
   },
   methods: {
     ...mapActions(["addToCart"]),
@@ -61,7 +74,8 @@ export default {
           qty: 1,
           user: {
             _id: this.$store.state.user._id,
-            name: this.$store.getters.fullname
+            email: this.$store.state.user.email,
+            name: this.$store.getters.fullname,
           }
         });
       }
@@ -70,7 +84,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* default primary color */
 
 .color-primary {
@@ -132,7 +146,76 @@ export default {
   transform: scale(1.005);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.025), 0 0px 20px rgba(0, 0, 0, 0.025);
 }
-.col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto{
+.col,
+.col-1,
+.col-10,
+.col-11,
+.col-12,
+.col-2,
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-9,
+.col-auto,
+.col-lg,
+.col-lg-1,
+.col-lg-10,
+.col-lg-11,
+.col-lg-12,
+.col-lg-2,
+.col-lg-3,
+.col-lg-4,
+.col-lg-5,
+.col-lg-6,
+.col-lg-7,
+.col-lg-8,
+.col-lg-9,
+.col-lg-auto,
+.col-md,
+.col-md-1,
+.col-md-10,
+.col-md-11,
+.col-md-12,
+.col-md-2,
+.col-md-3,
+.col-md-4,
+.col-md-5,
+.col-md-6,
+.col-md-7,
+.col-md-8,
+.col-md-9,
+.col-md-auto,
+.col-sm,
+.col-sm-1,
+.col-sm-10,
+.col-sm-11,
+.col-sm-12,
+.col-sm-2,
+.col-sm-3,
+.col-sm-4,
+.col-sm-5,
+.col-sm-6,
+.col-sm-7,
+.col-sm-8,
+.col-sm-9,
+.col-sm-auto,
+.col-xl,
+.col-xl-1,
+.col-xl-10,
+.col-xl-11,
+.col-xl-12,
+.col-xl-2,
+.col-xl-3,
+.col-xl-4,
+.col-xl-5,
+.col-xl-6,
+.col-xl-7,
+.col-xl-8,
+.col-xl-9,
+.col-xl-auto {
   padding: 5px !important;
 }
 </style>

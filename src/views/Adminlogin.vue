@@ -80,12 +80,16 @@ export default {
           this.$store
             .dispatch("Authenticate_Admin", success.accessToken)
             .then(data => {
-              const payload = {
-                message: "Login was successfully",
-                user: data[0]
-              };
-              this.$store.commit("SUCCESS", payload);
+              this.$store.commit("SUCCESS_ADMIN", data[0]);
               localStorage.setItem("isAuthorized", true);
+            })
+            .then(() => {
+              
+              this.$store.dispatch("getAllData", {accessToken: localStorage.getItem('accessToken')})
+              .then(data => {
+                this.$store.commit('SET_ADMIN_DATA', data)
+              })
+              .catch(error => console.log(error))
             })
             .then(() => {
               this.$store.commit("RESET");

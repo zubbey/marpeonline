@@ -2,7 +2,6 @@
 <div>
   <Header/>
   <div class="container py-5" style="padding-top:70px;">
-    <Loading v-if="log.loading"/>
     <InfoBreadcrumb v-for="item in product" :key="item._id" :item="item"/>
     <InfoBox :product="product"/>
     <InfoText :product="product"/>
@@ -40,6 +39,9 @@ export default {
 </script>
 
 <style scoped>
+.rounded {
+    border-radius: .55rem !important;
+}
 hr {
 width: 50px;
 border-bottom: 1px solid black;

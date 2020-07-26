@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="row justify-content-start" aria-label="breadcrumb">
+    <nav class="row justify-content-start bg-white rounded p-2 mb-3" aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
           <router-link to="/">Home</router-link>

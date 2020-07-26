@@ -9,16 +9,17 @@
             <h2>Join our Newsletter</h2>
             <p>Nulla ac convallis lorem, eget euismod nisl. bibendum nec.</p>
           </div>
-        </div>
-
-        <!-- Newsletter Form -->
-        <div class="col-12 col-lg-4">
           <div class="newsletter-form">
             <form>
               <input class="nl-email" placeholder="Your E-mail">
               <b-button variant="primary" @click.prevent="haSubmit"><b-icon icon="envelope"></b-icon> Submit</b-button>
             </form>
           </div>
+        </div>
+
+        <!-- Newsletter Form -->
+        <div class="col-12 col-lg-4">
+          
         </div>
 
       </div>
@@ -42,7 +43,10 @@ export default {
 .newsletter-area {
   position: relative;
   z-index: 1;
-  background-color: #dbf0fa;
+  background-color: #c5eafa;
+  background-image: url('~@/assets/newsletter.svg');
+  background-position: right;
+  background-repeat: no-repeat;
   padding: 75px;
 }
 
@@ -54,15 +58,15 @@ export default {
 .newsletter-area .newsletter-text h2 {
   font-size: 36px;
   margin-bottom: 10px;
-  color: #2c3539;
+  color: #263239;
 }
 
 .newsletter-area .newsletter-text h2 {
-  color: #2c3539;
+  color: #263239;
 }
 
 .newsletter-area .newsletter-text p {
-  color: #2c3539;
+  color: #263239;
   margin-bottom: 0;
 }
 
@@ -75,12 +79,12 @@ export default {
   width: 100%;
   height: 50px;
   background-color: inherit !important;
-  color: #2c3539;
-  font-size: 20px;
+  color: #263239;
+  font-size: 14px;
   font-style: italic;
   border: none;
   outline: none;
-  border-bottom: 2px solid #2c3539;
+  border-bottom: 2px solid #676c6f;
   padding: 0 30px;
 }
 
@@ -88,7 +92,7 @@ export default {
   -webkit-transition-duration: 500ms;
   transition-duration: 500ms;
   height: 50px;
-  background-color: #2c3539;
+  background-color: #263239;
   color: #fff;
   font-size: 18px;
   padding: 0px 30px;

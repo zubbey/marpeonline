@@ -71,6 +71,7 @@ export default {
       date: new Date().getUTCFullYear()
     };
   },
+  
   computed: {
     ...mapState(["user", "log"])
   },
@@ -101,7 +102,6 @@ export default {
             .then(() => {
               this.$store.commit("RESET");
               this.$router.push(this.$route.query.redirect || '/')
-              // this.$router.push(`/user/${this.$store.state.user.slug}/overview`);
             })
             .catch(error =>
               this.$store.commit("logServerErr", error.response.data.message)

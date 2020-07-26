@@ -1,21 +1,38 @@
 <template>
-  <div class="d-flex w-50 justify-content-sm-around m-auto">
-    <div class="spinner-grow text-secondary" role="status">
-    <span class="sr-only">Loading...</span>
-    </div>
-    <div class="spinner-grow text-secondary" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
-    <div class="spinner-grow text-secondary" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
+  <div>
+    <b-row cols="1" cols-sm="2" cols-md="2"  cols-lg="4">
+      <b-col>
+        <content-placeholders :rounded="true">
+          <content-placeholders-img />
+          <content-placeholders-text :lines="2" />
+        </content-placeholders>
+      </b-col>
+      <b-col>
+        <content-placeholders :rounded="true">
+          <content-placeholders-img />
+          <content-placeholders-text :lines="2" />
+        </content-placeholders>
+      </b-col>
+      <b-col>
+        <content-placeholders :rounded="true">
+          <content-placeholders-img />
+          <content-placeholders-text :lines="2" />
+        </content-placeholders>
+      </b-col>
+      <b-col>
+        <content-placeholders :rounded="true">
+          <content-placeholders-img />
+          <content-placeholders-text :lines="2" />
+        </content-placeholders>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Loading',
-}
+  name: "Loading"
+};
 </script>
 
 <style scoped>

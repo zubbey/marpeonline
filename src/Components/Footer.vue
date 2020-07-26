@@ -1,15 +1,17 @@
 <template>
-  <footer class="footer_area">
+  <footer class="footer_area bg-white">
     <div class="container">
       <div class="row justify-content-between">
         <div class="col-3 col-xl-2 col-lg-3 col-md-3 col-sm-3">
           <div class="footer-widget">
-            <div class="footer-title">Navigate</div>
+            <div class="footer-title">Quick link</div>
             <ul class="list-unstyled">
-              <router-link to="/"><li>About Us</li></router-link>
-              <router-link to="/"><li>Blog</li></router-link>
-              <router-link to="/"><li>Contact Us</li></router-link>
-              <router-link to="/"><li>Sitemap</li></router-link>
+              <router-link to="/servicefee"><li>Service Fee</li></router-link>
+              <router-link to="/costconverter"><li>Cost converter</li></router-link>
+              <router-link to="/track"><li>Track items</li></router-link>
+              <router-link to="/about"><li>About us</li></router-link>
+              <router-link to="/contact"><li>contact us</li></router-link>
+              <router-link to="/faqs"><li>FAQs</li></router-link>
             </ul>
           </div>
         </div>
@@ -18,10 +20,8 @@
           <div class="footer-widget">
             <div class="footer-title">Collection</div>
             <ul class="list-unstyled">
-              <router-link to="/products"><li>New arrivals</li></router-link>
-              <router-link to="/products"><li>Featured</li></router-link>
-              <router-link to="/products"><li>Catalog</li></router-link>
-              <router-link to="/products"><li>Brands</li></router-link>
+              <router-link to="#"><li>Products Available in Our Nigerian Warehouse</li></router-link>
+              <router-link to="#"><li>Featured Products from 1688</li></router-link>
             </ul>
           </div>
         </div>
@@ -29,21 +29,17 @@
         <div class="col-3 col-xl-2 col-lg-3 col-md-3 col-sm-3">
           <div class="footer-widget">
             <div class="footer-title">Catagories</div>
-            <ul class="list-unstyled">
-              <router-link to="/products"><li>Tables</li></router-link>
-              <router-link to="/products"><li>Lamps</li></router-link>
-              <router-link to="/products"><li>Chairs</li></router-link>
-              <router-link to="/products"><li>Sofas</li></router-link>
+            <ul class="list-unstyled" v-for="category in slicedCat" :key="category._id">
+              <router-link to="#"><li>{{ category.categoryName }}</li></router-link>
             </ul>
           </div>
         </div>
 
         <div class="col-12 col-xl-6 col-lg-3 col-md-3 col-sm-12 text-left text-md-right pb-5">
           <div class="footer-widget">
-            <h4>399 Crowfield Road,</h4>
-            <h4>Phoenix, Arizona 85012</h4>
-            <a href="mailto:#">asff@fdsfsdc.com</a>
-            <h6>+602-926-5809</h6>
+            <h4>Port Harcourt Rivers State, Nigeria</h4>
+            <a href="mailto:support@marpe.online">support@marpe.online</a>
+            <h6>+234 812 377 1335</h6>
           </div>
         </div>
 
@@ -58,10 +54,10 @@
         <div class="col-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 text-right">
           <div class="social-info">
             <strong>Get social</strong>
-            <img class="twitter" src="@/assets/twitter.png">
-            <img class="pinterest" src="@/assets/pinterest.png">
-            <img class="facebook" src="@/assets/facebook.png">
-            <img class="instagram" src="@/assets/insta.png">
+            <a class="p-1" href="https://www.facebook.com/marpe.online/" target="_blank"><mdb-icon fab icon="facebook-square" size="lg" /></a>
+            <a class="p-1" href="https://twitter.com/onlinemarpe" target="_blank"><mdb-icon fab icon="twitter-square" size="lg" /></a>
+            <a class="p-1" href="https://www.linkedin.com/company/marpe-online-limited" target="_blank"><mdb-icon fab icon="linkedin" size="lg" /></a>
+            <a class="p-1" href="https://www.instagram.com/marpe.online/" target="_blank"><mdb-icon fab icon="instagram" size="lg" /></a>
           </div>
         </div>
       </div>
@@ -70,8 +66,18 @@
 </template>
 
 <script>
+import { mdbIcon } from 'mdbvue';
+import { mapGetters } from 'vuex';
+
 export default {
-  name: 'Footer'
+  name: 'Footer',
+  props: ['categories'],
+  components: {
+    mdbIcon
+  },
+  computed: {
+    ...mapGetters(['slicedCat'])
+  }
 }
 </script>
 

@@ -4,10 +4,6 @@
 > and Vue/Vuex/Vue-router.
 
 
-<p align="center">
-  <img src="https://i.imgur.com/LMRIylM.png">
-</p>
-
 ## Development/Producation Setup
 
 ``` bash

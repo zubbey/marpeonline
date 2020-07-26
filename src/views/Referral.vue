@@ -28,7 +28,7 @@
           </b-tab>
 
           <b-tab :title="`Total Affliate (${totalAffiliate})`">
-            <b-card-text>
+            <b-card-text v-if="totalAffiliate > 0">
               <b-list-group>
                 <b-list-group-item
                   style="border: none"
@@ -49,6 +49,9 @@
                 </b-list-group-item>
               </b-list-group>
             </b-card-text>
+            <b-card-text class="p-3">
+              <p>you have not referred anyone yet</p>
+            </b-card-text>
           </b-tab>
           <b-tab title="Earning History">
             <b-row>
@@ -59,7 +62,7 @@
                   </b-form-group>
 
                   <b-form-group class="mb-0">
-                    <b-input-group size="lg">
+                    <b-input-group>
                       <b-form-input v-model="filter" type="search" placeholder="Type to Search"></b-form-input>
                     </b-input-group>
                   </b-form-group>

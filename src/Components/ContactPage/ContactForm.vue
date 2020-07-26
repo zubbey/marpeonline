@@ -3,7 +3,7 @@
     <div class="container-fluid py-5">
       <div class="row d-flex">
         <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12 order-sm-0 order-12" style="margin-right:-120px;">
-          <img class="img-fluid" src="@/assets/con.jpg">
+          <b-img-lazy v-bind="mainProps" class="img-fluid" :src="this.formImage.image"></b-img-lazy>
         </div>
         <div class="col-12 col-xl-6 col-lg-5 col-md-6 col-sm-12 order-first order-xl-0">
           <h1>Hello there</h1>
@@ -21,7 +21,7 @@
               <textarea class="form-control" style="overflow:hidden; height:130px" rows="3" required></textarea>
               <label class="label" for="Message">Message</label>
             </div>
-              <button class="btn btn-light" href="#" role="button">submit</button>
+              <button class="btn btn-primary" href="#" role="button">submit</button>
           </form>
         </div>
         </div>
@@ -31,7 +31,21 @@
 
 <script>
 export default {
-  name: 'ContactForm'
+  name: 'ContactForm',
+  props: ['formImage'],
+  data(){
+    return{
+      mainProps: {
+        center: true,
+        fluidGrow: true,
+        blank: true,
+        blankColor: "#eee",
+        width: "100%",
+        height: 400,
+        class: "my-5"
+      }
+    }
+  }
 }
 </script>
 

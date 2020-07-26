@@ -2,17 +2,18 @@
   <div>
     <Header />
     <div class="container">
-      <div class="py-5 text-center">
-        <h2>Checkout form</h2>
-        <p
-          class="lead"
-        >Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
-      </div>
+      <b-row class="bg-white p-4 rounded my-4">
+        <div class="text-center">
+          <h2>
+            <strong>Checkout</strong>
+          </h2>
+        </div>
+      </b-row>
       <!-- col-md-4 order-md-2 mb-4 -->
-      <b-row cols="1" cols-lg="2">
+      <b-row cols="1" cols-lg="2" class="bg-white p-4 mb-5 rounded">
         <b-col cols-sm="1" cols-md="4" order-md="2" class="mb-4">
           <h4 class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-muted">Your cart</span>
+            <span class="text-muted">your cart</span>
             <span class="badge badge-secondary badge-pill">{{ this.cart.length }}</span>
           </h4>
           <ul v-for="(item, index) in cart" :key="index" class="list-group mb-3">
@@ -22,23 +23,45 @@
               </div>
               <div>
                 <h6 class="my-0">{{ item.product.name }}</h6>
-                <h6 class="bold">Qty: {{ item.qty }}</h6>
-                <span class="text-muted">
-                  Price:
+                <p class="mt-2">Qty: {{ item.qty }}</p>
+              </div>
+              <div>
+                <h6 class="my-0">
                   <strong>{{ item.product.price | toCurrency }}</strong>
-                </span>
+                </h6>
               </div>
             </li>
           </ul>
+
           <ul class="list-group mb-3">
             <li class="list-group-item d-flex justify-content-between">
+              <span>Shipping Fee</span>
+              <strong>{{fee}}%</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
               <span>Total</span>
-              <strong>{{ totalItemPrice | toCurrency }}</strong>
+              <strong>{{ percentage(totalItemPrice, fee) | toCurrency }}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Delivery Method</span>
+              <b-form-select v-model="delivery" :options="options"></b-form-select>
             </li>
           </ul>
         </b-col>
         <!-- col-md-8 order-md-1 -->
-        <b-col cols-sm="1" cols-md="8" order-md="1">
+        <b-col v-if="!newUser && !log.isUserActive" cols-sm="1" cols-md="8" order-md="1">
+          <h4 class="mb-3">Sign into your account</h4>
+          <p class="muted">Or click continue to create account</p>
+          <b-button @click="sendToLogin" variant="primary">
+            Sign in
+            <b-icon icon="chevron-right"></b-icon>
+          </b-button>Or
+          <b-button @click="newUser = true" variant="outline">
+            Continue
+            <b-icon icon="chevron-right"></b-icon>
+          </b-button>
+        </b-col>
+        <b-col v-if="newUser || log.isUserActive" cols-sm="1" cols-md="8" order-md="1">
           <h4 class="mb-3">Billing address</h4>
           <b-alert show variant="danger" v-if="log.msgError && !log.message == ''">{{ log.message }}</b-alert>
 
@@ -46,22 +69,22 @@
             <form class="needs-validation" novalidate @submit="checkForm">
               <div class="form-row">
                 <div class="col mb-3">
-                  <label for="validationCustom01">First name</label>
+                  <label for="firstname">First name</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="validationCustom01"
+                    id="firstname"
                     v-model="form.firstname"
                     required
                   />
                   <div class="invalid-feedback">Please provide your firstname.</div>
                 </div>
                 <div class="col mb-3">
-                  <label for="validationCustom02">Last name</label>
+                  <label for="lastname">Last name</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="validationCustom02"
+                    id="lastname"
                     v-model="form.lastname"
                     required
                   />
@@ -69,39 +92,27 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="validationCustom03">Email</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="validationCustom03"
-                  v-model="form.email"
-                  required
-                />
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" v-model="form.email" required />
                 <div
                   class="invalid-feedback"
                 >Please provide a valid email address for shipping update.</div>
               </div>
               <div class="form-group">
-                <label for="validationCustom04">Phone</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="validationCustom04"
-                  v-model="form.phone"
-                  required
-                />
+                <label for="phone">Phone</label>
+                <input type="text" class="form-control" id="phone" v-model="form.phone" required />
                 <div class="invalid-feedback">Please provide your phone number for shipping update.</div>
               </div>
               <div class="form-group">
-                <label for="validationCustom05">Address</label>
+                <label for="address">Address</label>
                 <input
                   type="text"
                   class="form-control"
-                  id="validationCustom05"
+                  id="address"
                   v-model="form.address"
                   required
                 />
-                <div class="invalid-feedback">Please provide your Address for shipping update.</div>
+                <div class="invalid-feedback">Please provide your Home Address.</div>
               </div>
               <div class="form-row">
                 <div class="col-md-6 mb-3">
@@ -111,188 +122,63 @@
                   </b-form-group>
                 </div>
                 <div class="col-md-3 mb-3">
-                  <label for="validationCustom06">City</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="validationCustom06"
-                    v-model="form.city"
-                    required
-                  />
+                  <label for="city">City</label>
+                  <input type="text" class="form-control" id="city" v-model="form.city" required />
                   <div class="invalid-feedback">Please provide a valid state.</div>
                 </div>
                 <div class="col-md-3 mb-3">
-                  <label for="validationCustom07">Zip</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="validationCustom07"
-                    v-model="form.zip"
-                    required
-                  />
+                  <label for="zip">Zip</label>
+                  <input type="text" class="form-control" id="zip" v-model="form.zip" required />
                   <div class="invalid-feedback">Please provide a valid zip.</div>
                 </div>
               </div>
               <div class="form-group">
+                <label for="shippingaddress">Shipping Address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="shippingaddress"
+                  v-model="form.shippingaddress"
+                  required
+                />
+                <div class="invalid-feedback">Please provide your shipping address update.</div>
+              </div>
+              <div class="form-group">
                 <div class="form-check pl-0">
-                  <input class="form-check-input" type="checkbox" value id="invalidCheck" required />
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value
+                    id="paystack"
+                    checked
+                    disabled
+                    required
+                  />
                   <label class="form-check-label" for="invalidCheck">Checkout with Paystack</label>
                   <div class="invalid-feedback">You must select your payment method.</div>
                 </div>
               </div>
-              <mdb-btn type="submit">
-                <b-spinner small type="grow" v-if="log.loading"></b-spinner>Continue
+              <mdb-btn type="submit" color="primary">
+                <b-spinner small v-if="log.loading"></b-spinner>Continue
                 <b-icon icon="chevron-right"></b-icon>
               </mdb-btn>
             </form>
           </mdb-container>
-          <!-- <form class="needs-validation" novalidate>
-            <b-row>
-              <b-col>
-                <b-form-group>
-                  <label for="inputFname">First name</label>
-                  <b-form-input
-                    type="text"
-                    id="inputFname"
-                    :state="valid"
-                    v-model="form.firstname"
-                  />
-                  <b-form-invalid-feedback
-                    v-if="error == true"
-                    :state="validation.fname"
-                  >Firstname is Required.</b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col>
-                <b-form-group>
-                  <label for="inputLname">Last name</label>
-                  <b-form-input type="text" id="inputLname" :state="valid" v-model="form.lastname" />
-                  <b-form-invalid-feedback
-                    v-if="error == true"
-                    :state="validation.lname"
-                  >Lastname is Required.</b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-            </b-row>
-
-            <b-form-group>
-              <label for="email">Email</label>
-              <b-form-input type="email" id="email" :state="valid" v-model="form.email" />
-              <b-form-invalid-feedback
-                v-if="error == true"
-                :state="validation.email"
-              >Email address is required for shipping updates.</b-form-invalid-feedback>
-            </b-form-group>
-
-            <b-form-group>
-              <label for="phone">Phone Number</label>
-              <b-form-input type="text" id="phone" :state="valid" v-model="form.phone" />
-              <b-form-invalid-feedback
-                v-if="error == true"
-                :state="validation.phone"
-              >Phone number is required for shipping updates.</b-form-invalid-feedback>
-            </b-form-group>
-
-            <b-form-group>
-              <label for="address">Address</label>
-              <b-form-input type="text" id="address" :state="valid" v-model="form.address" />
-              <b-form-invalid-feedback
-                v-if="error == true"
-                :state="validation.address"
-              >Address is required for shipping updates.</b-form-invalid-feedback>
-            </b-form-group>
-
-            <b-row>
-              <b-col cols-md="6" class="mb-3">
-                <b-form-group id="country" label="Your Country" label-for="country">
-                  <b-form-select
-                    id="country"
-                    v-model="form.country"
-                    :options="country"
-                    :state="valid"
-                  >
-                    <b-form-invalid-feedback
-                      v-if="error == true"
-                      :state="validation.country"
-                    >Country is required for shipping updates.</b-form-invalid-feedback>
-                  </b-form-select>
-                </b-form-group>
-              </b-col>
-              <b-col cols-md="3" class="mb-3">
-                <b-form-group>
-                  <label for="city">City</label>
-                  <b-form-input type="text" id="city" :state="valid" v-model="form.city" />
-                  <b-form-invalid-feedback
-                    v-if="error == true"
-                    :state="validation.city"
-                  >City is required for shipping updates.</b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-              <b-col cols-md="3" class="mb-3">
-                <b-form-group>
-                  <label for="zip">Zip</label>
-                  <b-form-input type="text" id="zip" :state="valid" v-model="form.zip" />
-                  <b-form-invalid-feedback
-                    v-if="error == true"
-                    :state="validation.zip"
-                  >Zip is required.</b-form-invalid-feedback>
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <hr class="mb-4" />
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="same-address" />
-              <label
-                class="custom-control-label"
-                for="same-address"
-              >Shipping address is the same as my billing address</label>
-            </div>
-            <hr class="mb-4" />
-
-            <h4 class="mb-3">Payment</h4>
-
-            <div class="d-block my-3">
-              <b-form-invalid-feedback
-                v-if="error == true"
-                :state="form.paystack"
-              >Please select your payment method.</b-form-invalid-feedback>
-              <div class="custom-control custom-radio">
-                <input
-                  type="radio"
-                  id="customRadio1"
-                  name="customRadio"
-                  v-model="form.paystack"
-                  :value="!form.paystack"
-                  :unchecked-value="form.paystack"
-                  class="custom-control-input"
-                />
-                <label class="custom-control-label" for="customRadio1">Checkout with Paystack</label>
-              </div>
-              <div class="custom-control custom-radio">
-                <input
-                  type="radio"
-                  id="customRadio2"
-                  name="customRadio"
-                  v-model="form.wallet"
-                  :value="!form.wallet"
-                  :unchecked-value="form.wallet"
-                  class="custom-control-input"
-                />
-                <label class="custom-control-label" for="customRadio2">
-                  Checkout with Wallet
-                  <b-badge variant="warning">Coming soon!</b-badge>
-                </label>
-              </div>
-            </div>
-
-            <hr class="mb-4" />
-            <b-button variant="success" type="submit" @click.prevent="submit">
-              <b-spinner small type="grow" v-if="log.loading"></b-spinner>Continue
-              <b-icon icon="chevron-right"></b-icon>
-            </b-button>
-          </form>-->
         </b-col>
       </b-row>
+
+      <b-modal
+        style="padding: 0;"
+        id="modal-prevent-closing"
+        ref="paymentModal"
+        hide-header
+        hide-footer
+        no-stacking
+        ok-disabled
+        size="md"
+      >
+        <object type="text/html" :data="authorization_url" style="width:100%; height:500px;"></object>
+      </b-modal>
 
       <b-modal
         id="modal-prevent-closing"
@@ -339,29 +225,98 @@ export default {
     mdbContainer,
     mdbBtn,
     Header,
-    Footer
+    Footer,
   },
   data() {
     return {
       error: null,
       valid: null,
+      fee: null,
+      newUser: false,
+      authorization_url: null,
+      reference: null,
+      checkTransaction: null,
+      toastCount: 0,
       form: {
         firstname: "",
         lastname: "",
         email: "",
         phone: "",
         address: "",
+        shippingaddress: "",
         city: "",
         country: "",
         zip: null,
         password: "",
         paystack: false,
-        wallet: false
+        wallet: false,
       },
-      country: [{ text: "Select Country", value: null }]
+      country: [{ text: "Select Country", value: null }],
+      delivery: null,
+      currency: "",
+      options: [],
     };
   },
-  mounted() {
+  created() {
+    this.$store.watch(
+      (state) => {
+        console.clear(state);
+        return this.$store.state.transaction; // could also put a Getter here
+      },
+      (newTrans, oldTrans) => {
+        console.clear(oldTrans);
+        //something changed do something
+        if (newTrans === "success") {
+          this.stopTransactionCheck();
+          if (this.$store.state.log.isUserActive === true) {
+            this.updateUserData();
+          } else {
+            this.loginNewUser();
+          }
+          this.makeToast("success", "Transaction was success", true);
+          this.$refs["paymentModal"].hide();
+        } else if (newTrans === "failed") {
+          this.stopTransactionCheck();
+          this.makeToast(
+            "danger",
+            "Transaction Failed, Please try again",
+            true
+          );
+          this.$refs["paymentModal"].hide();
+          setTimeout(() => {
+            location.reload();
+          }, 3000);
+        } else if (newTrans === "Insufficient Funds") {
+          this.stopTransactionCheck();
+          this.makeToast(
+            "warning",
+            "Insufficient Funds, Please try again",
+            true
+          );
+          this.$refs["paymentModal"].hide();
+          setTimeout(() => {
+            location.reload();
+          }, 3000);
+        } else if (newTrans === "warning") {
+          this.makeToast(
+            "warning",
+            this.log.message,
+            true
+          );
+        }
+      }
+    );
+
+    this.fee = this.settings.commitions.shipping;
+    this.options = this.settings.shippingmethods;
+    this.delivery = this.settings.shippingmethods[0];
+    if (
+      this.currencyType.currency == "NGN" ||
+      this.currencyType.currency == "USD"
+    ) {
+      this.currency = this.currencyType.currency;
+    }
+
     if (this.log.isUserActive === true) {
       this.form = {
         firstname: this.user.firstname,
@@ -369,30 +324,34 @@ export default {
         email: this.user.email,
         phone: this.user.phone,
         address: this.user.address,
+        shippingaddress: this.user.shippingaddress,
         city: this.user.city,
         country: this.user.country,
-        zip: this.user.zip
+        zip: this.user.zip,
       };
     }
     this.$store
       .dispatch("getCountries")
-      .then(data => {
-        data.forEach(country => {
+      .then((data) => {
+        data.forEach((country) => {
           this.country.push(country.name);
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   },
   computed: {
-    ...mapState(["log", "cart", "user", "currency"]),
-    ...mapGetters(["totalItemPrice"])
+    ...mapState(["settings", "log", "cart", "user", "currencyType"]),
+    ...mapGetters(["totalItemPrice"]),
   },
   methods: {
+    sendToLogin() {
+      this.$router.push("/login?redirect=checkout");
+    },
     validate() {
       const form = [...arguments];
-      const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      const emailRegexp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
       for (let index in form) {
         let field = form[index];
         if (field === "email" && !emailRegexp.test(this.form[field])) {
@@ -406,86 +365,140 @@ export default {
     checkForm(event) {
       event.preventDefault();
       event.target.classList.add("was-validated");
-      if (this.validate("email", "firstname", "lastname", "phone")) {
+      if (
+        this.validate(
+          "email",
+          "firstname",
+          "lastname",
+          "phone",
+          "shippingaddress"
+        )
+      ) {
         let data = {
           cart: this.cart,
           user: this.form,
-          amount: this.totalItemPrice,
-          date: new Date()
+          currency: this.currency,
+          reference: this.reference,
+          deliverymethod: this.delivery,
+          total: this.percentage(this.totalItemPrice, this.fee),
+          date: new Date(),
         };
         if (this.log.isUserActive === false) {
           this.$refs["passwordModel"].show();
         } else {
           //place order
           this.$store
-            .dispatch("placeOrder", data)
+            .dispatch("initTransaction", data)
+            .then((response) => {
+              this.authorization_url = response.data.authorization_url;
+              this.reference = response.data.reference;
+            })
+            .then(() => this.$refs["paymentModal"].show())
             .then(() => {
-              // update user info
-              let token = localStorage.getItem("accessToken");
-
-              this.$store
-                .dispatch("updateUserInfo", {
-                  token,
-                  payload: {
-                    firstname: this.form.firstname,
-                    lastname: this.form.lastname,
-                    email: this.form.email,
-                    phone: this.form.phone,
-                    address: this.form.address,
-                    city: this.form.city,
-                    country: this.form.country,
-                    zip: this.form.zip
+              let payload = {
+                cart: this.cart,
+                user: this.form,
+                currency: this.currency,
+                deliverymethod: this.delivery,
+                total: this.percentage(this.totalItemPrice, this.fee),
+                reference: this.reference,
+                date: new Date(),
+              };
+              this.checkTransaction = setInterval(() => {
+                this.$store.dispatch("verifyPayment", payload).then((data) => {
+                  if (data.data.status === "status") {
+                    console.log("success");
+                    this.stopTransactionCheck();
+                  } else {
+                    console.log("not verifed!");
                   }
-                })
-                .then(() => {
-                  let msg = "Saved! you're doing well";
-                  this.$store.commit("SAVED", msg);
-                })
-                .then(() => {
-                  this.$store
-                    .dispatch("Authenticate_User", token)
-                    .then(data => {
-                      const payload = { message: "", user: data[0] };
-                      this.$store.commit("SUCCESS", payload);
-                    })
-                    .then(() =>
-                      setTimeout(() => {
-                        this.$store.commit("RESET");
-                      }, 3000)
-                    )
-                    .catch(error => console.log(error));
-                })
-                .then(() => {
-                  //remove cart
-                  this.$store
-                    .dispatch("emptyCart", this.$store.state.user._id)
-                    .then(() => this.$store.commit("EMPTY_CART"));
-                })
-                .then(() => {
-                  // get user orders
-                  this.$store
-                    .dispatch("getOrders", token)
-                    .then(data => {
-                      this.$store.commit("SET_ORDERS", data);
-                    });
-                })
-                .then(() => {
-                  // redirect
-                  this.$router.push(
-                    `/user/${this.$store.state.user.slug}/orders`
-                  );
-                })
-                .catch(error => {
-                  this.$store.commit(
-                    "logServerErr",
-                    error.response.data.message
-                  );
                 });
-            });
+              }, 5000);
+            })
+            .catch((error) =>
+              this.$store.commit("logServerErr", error.response.data.message)
+            );
         }
       } else {
         console.log("invalid!");
       }
+    },
+    stopTransactionCheck() {
+      clearInterval(this.checkTransaction);
+    },
+
+    updateUserData() {
+      let token = localStorage.getItem("accessToken");
+      let data = {
+          cart: this.cart,
+          user: this.form,
+          currency: this.currency,
+          reference: this.reference,
+          deliverymethod: this.delivery,
+          total: this.percentage(this.totalItemPrice, this.fee),
+          date: new Date(),
+        };
+      // save order
+      this.$store.dispatch("placeDomesticOrder", data)
+      .then(() => this.$store.commit("RESET"))
+      .catch(error => this.$store.commit("logServerErr", error.response.data.message));
+
+      // update User data
+      this.$store
+        .dispatch("updateUserInfo", {
+          token,
+          payload: {
+            firstname: this.form.firstname,
+            lastname: this.form.lastname,
+            email: this.form.email,
+            phone: this.form.phone,
+            address: this.form.address,
+            shippingaddress: this.form.shippingaddress,
+            city: this.form.city,
+            country: this.form.country,
+            zip: this.form.zip,
+          },
+        })
+        .then(() => {
+          let msg = "Saved! you're doing well";
+          this.$store.commit("SAVED", msg);
+        })
+        .then(() => {
+          this.$store
+            .dispatch("Authenticate_User", token)
+            .then((data) => {
+              const payload = { message: "", user: data[0] };
+              this.$store.commit("SUCCESS", payload);
+            })
+            .then(() =>
+              setTimeout(() => {
+                this.$store.commit("RESET");
+              }, 3000)
+            )
+            .catch((error) => console.log(error));
+        })
+        .then(() => {
+          //remove cart
+          this.$store
+            .dispatch("emptyCart", this.$store.state.user._id)
+            .then(() => this.$store.commit("EMPTY_CART"));
+        })
+        .then(() => {
+          // get user orders
+          this.$store
+            .dispatch("getOrders", token)
+            .then((data) => {
+              this.$store.commit("SET_ORDERS", data);
+            })
+            .catch((error) => console.log(error));
+          // redirect
+          this.$router.push(
+            `/user/${this.$store.state.user.slug}/orders/domestic?listorders=true`
+          );
+        })
+        .catch((error) => {
+          this.$store.commit("logServerErr", error.response.data.message);
+        });
     },
     checkFormValidity() {
       const valid = this.$refs.form.checkValidity();
@@ -509,8 +522,11 @@ export default {
       let data = {
         cart: this.cart,
         user: this.form,
-        amount: this.totalItemPrice,
-        date: new Date()
+        currency: this.currency,
+        reference: this.reference,
+        deliverymethod: this.delivery,
+        total: this.percentage(this.totalItemPrice, this.fee),
+        date: new Date(),
       };
 
       this.$store
@@ -519,79 +535,115 @@ export default {
           lastname: this.form.lastname,
           email: this.form.email,
           phone: this.form.phone,
-          password: this.form.password
+          password: this.form.password,
         })
-        .then(success => {
+        .then((success) => {
           this.$store.commit("SUCCESS", success);
-        })
-        .then(() => (this.modalShow = true))
-        .then(() => [
-          // place the order
-          this.$store.dispatch("placeOrder", data)
-        ])
-        .then(() => {
-          // login and redirect user to order
           this.$store
             .dispatch("loginUser", {
               email: this.form.email,
-              password: this.form.password
+              password: this.form.password,
             })
-            .then(success => {
+            .then((success) => {
               localStorage.setItem("accessToken", success.accessToken);
 
               this.$store
                 .dispatch("Authenticate_User", success.accessToken)
-                .then(data => {
+                .then((data) => {
                   const payload = {
                     message: "Login was successfully",
-                    user: data[0]
+                    user: data[0],
                   };
                   this.$store.commit("SUCCESS", payload);
                   localStorage.setItem("isAuthorized", true);
-                })
-                .then(() => {
-                  // get user orders
-                  this.$store
-                    .dispatch("getOrders", success.accessToken)
-                    .then(data => {
-                      this.$store.commit("SET_ORDERS", data);
-                    });
-                })
-                .then(() => {
-                  this.$store
-                    .dispatch("emptyCart", localStorage.getItem("guest_id"))
-                    .then(() => this.$store.commit("EMPTY_CART"));
-                })
-                .then(() => {
-                  this.$store.commit("RESET");
-                  this.$router.push(
-                    `/user/${this.$store.state.user.slug}/orders`
-                  );
-                })
-                .catch(error =>
-                  this.$store.commit(
-                    "logServerErr",
-                    error.response.data.message
-                  )
-                );
+                });
+            });
+        })
+        .then(() => (this.modalShow = true))
+        .then(() => {
+          //place order
+          this.$store
+            .dispatch("initTransaction", data)
+            .then((response) => {
+              this.authorization_url = response.data.authorization_url;
+              this.reference = response.data.reference;
             })
-            .catch(error =>
+            .then(() => this.$refs["paymentModal"].show())
+            .then(() => {
+              let payload = {
+                cart: this.cart,
+                user: this.form,
+                currency: this.currency,
+                deliverymethod: this.delivery,
+                total: this.percentage(this.totalItemPrice, this.fee),
+                reference: this.reference,
+                date: new Date(),
+              };
+              this.checkTransaction = setInterval(() => {
+                this.$store.dispatch("verifyPayment", payload).then((data) => {
+                  if (data.data.status === "status") {
+                    console.log("success");
+                    this.stopTransactionCheck();
+                  } else {
+                    console.log("not verifed!");
+                  }
+                });
+              }, 5000);
+            })
+            .catch((error) =>
               this.$store.commit("logServerErr", error.response.data.message)
             );
         })
-        .catch(error =>
+        .catch((error) =>
           this.$store.commit("logServerErr", error.response.data.message)
         );
 
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing");
       });
+    },
+    loginNewUser() {
+      this.$store
+        .dispatch("emptyCart", localStorage.getItem("guest_id"))
+        .then(() => this.$store.commit("EMPTY_CART"))
+        .then(() => {
+          this.$store.commit("RESET");
+          this.$router.push(
+            `/user/${this.$store.state.user.slug}/orders/domestic?listorders=true`
+          );
+        })
+        .catch((error) =>
+          this.$store.commit("logServerErr", error.response.data.message)
+        );
+    },
+    percentage(num, per) {
+      let percent = (num / 100) * per;
+      return parseInt(percent) + parseInt(num);
+    },
+    makeToast(variant = null, msg, append = false) {
+      this.toastCount++;
+      this.$bvToast.toast(`${msg}`, {
+        title: "Transaction Status",
+        variant: variant,
+        solid: true,
+        autoHideDelay: 6000,
+        appendToast: append,
+      });
     }
-  }
+  },
 };
 </script>
 
 <style scoped>
+.btn {
+  margin: 0 !important;
+}
+.rounded {
+  border-radius: 0.55rem !important;
+}
+.list-group-item {
+  border: none !important;
+}
 hr {
   width: 50px;
   border-bottom: 1px solid black;

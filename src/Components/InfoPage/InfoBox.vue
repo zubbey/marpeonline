@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div class="row mb-5" v-for="item in product" :key="item._id">
+    <content-placeholders :rounded="true" v-if="product == null">
+      <content-placeholders-img />
+      <content-placeholders-heading />
+    </content-placeholders>
+    <div class="row mb-5 bg-white rounded p-5" v-for="item in product" :key="item._id">
       <div class="col6 col-xl-6 col-lg-6 col-md-12 col-sm-12">
         <div  v-viewer="viewerOptions">
         <img class="img-fluid imgSingle" :src="activeImage || item.imageLinks[0]" :data-href="item.thumbnail" >
@@ -121,9 +125,9 @@ export default {
             name: "Guest"
           }
         })
-        .then(success => {
+        // .then(success => {
           
-        });
+        // });
       } else if (localStorage.getItem("accessToken")) {
         // if()
         this.addToCart({
@@ -131,6 +135,7 @@ export default {
           qty: this.quan,
           user: {
             _id: this.$store.state.user._id,
+            email: this.$store.state.user.email,
             name: this.$store.getters.fullname
           }
         });
@@ -151,7 +156,7 @@ export default {
 <style scoped>
 .img-fluid{
   min-width: 90% !important;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border: 1px solid #eee !important;
 }
 img.imgSingle {
     cursor: pointer;
@@ -217,5 +222,7 @@ img.imgArray:hover{
   background-color: inherit;
   color: black;
 }
-
+.vue-content-placeholders-img{
+  height: 320px;
+}
 </style>

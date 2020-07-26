@@ -6,13 +6,50 @@ import User from '../Endpoints/user';
 import Admin from '../Endpoints/admin';
 import Public_api from '../Endpoints/public_api';
 
+// GET ALL SETTINGS
+export const getSettings = ({ commit }) => {
+    commit('LOADING');
+    Admin.systemSettings().then(response => {
+        commit('SET_SETTINGS', response.data[0]);
+        commit('RESET')
+    })
+}
+
+// CHANGE CURRENCY
+export const changeCurrency = ({ commit }, {newCurrency, currentCurrency}) => {
+    commit('LOADING');
+    return new Promise(async (resolve, reject) => {
+        await Admin.changeCurrency(newCurrency, currentCurrency).then(({ data, status }) => {
+            if(status === 200){
+                resolve(data, true)
+            }
+        })
+        .catch(error => reject(error)) 
+    })
+}
+
+// CONVERT CURRENCY
+export const convertCurrency = ({ commit }, {payload}) => {
+    commit('LOADING');
+    return new Promise(async (resolve, reject) => {
+        await Public_api.convertCurrency(payload.from, payload.to).then(({data, status}) => {
+            if(status === 200){
+                resolve(data, true)
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+
 // GET ALL PRODUCTS
 export const getNigeriaProducts = ({ commit }) =>{
+    commit('LOADING');
     Product.allNigeria().then(response => {
         commit('SET_NIGERIA_PRODUCTS', response.data);
     })
 }
 export const get1688Products = ({ commit }) =>{
+    commit('LOADING');
     Product.all1688().then(response => {
         commit('SET_1688_PRODUCTS', response.data);
     })
@@ -32,10 +69,27 @@ export const getProduct = ({ commit }, productSlug) =>{
     });
 }
 
+// SEARCHED PRODUCT KEYWORD
+export const getSearchedKeyword = ({ commit }, keyword) => {
+    return new Promise (async (resolve, reject) => {
+        commit('LOADING');
+        await Product.searchedKeyword(keyword).then( ({ data, status }) => {
+            if(status === 200){
+                resolve(data, true)
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+
 // GET ALL CATEGORIES
 export const getCategories = ({ commit }) =>{
-    Category.all().then(response => {
-        commit('SET_CATEGORIES', response.data);
+    return new Promise( async (resolve, reject) => {
+        commit('LOADING');
+        Category.all().then(response => {
+            resolve(response.data, true)
+        })
+        .catch(error => reject(error))
     })
 }
 
@@ -79,10 +133,11 @@ export const addToCart = ({ commit }, {product, qty, user}) => {
 }
 
 // Get product to cart 
-export const getCartItems = ({commit}, userid) => {
+export const getCartItems = ({ commit }, userid) => {
+    commit('LOADING');
     return new Promise((resolve, reject) => {
-        Cart.getUserCart(userid).then(({status, data}) => {
-            if(status == 200){
+        Cart.getUserCart(userid).then(({data, status}) => {
+            if(status === 200){
                 resolve(data, true)
             }
         })
@@ -98,6 +153,7 @@ export const removeCartItem = ({ commit }, product) => {
 
 // Empty User Cart
 export const emptyCart = ({commit}, userid) => {
+    console.log(commit);
     return new Promise( async (resolve, reject) => {
         await Cart.empty(userid).then(({status}) => {
             if(status === 200){
@@ -108,19 +164,60 @@ export const emptyCart = ({commit}, userid) => {
     })
 }
 
-//Place Order
-export const placeOrder = ({ commit }, data ) => {
-    commit('LOADING');
-    return new Promise( async (resolve, reject) => {
-        await Order.post(data).then(response => {
-            resolve(response)
+// Verify Payment
+export const verifyPayment = ({ commit }, payload) => {
+    return new Promise(async (resolve, reject) => {
+        await Order.verityTransaction(payload).then(({ data, status }) => {
+            if(status === 200){
+                resolve(data, true)
+                console.log(data);
+                
+            }
+            if(data.data.status === 'success'){
+                resolve('success', true);
+                commit("TRANSACTION_SUCCESS");
+                console.log(true);
+            }else if(data.data.status === 'failed'){
+                    resolve('failed', true);
+                    commit("TRANSACTION_FAILED");
+            }else if(data.data.gateway_response === 'Insufficient Funds'){
+                resolve('insufficient', true);
+                commit("TRANSACTION_INSUFFICIENT_FUNDS");
+            }
         })
         .catch(error => reject(error))
     })
 }
 
+//Place Order
+export const initTransaction = ({ commit }, data ) => {
+    commit('LOADING');
+    return new Promise( async (resolve, reject) => {
+        await Order.post(data).then(({ data, status }) => {
+            if(status === 200){
+                resolve(data, true);
+                commit('INIT_RESPONSE', data.message);
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+
+// PLACE DOMESTIC ORDER
+export const placeDomesticOrder = ({ commit }, data ) => {
+    commit('LOADING');
+    return new Promise( async (resolve, reject) => {
+        await Order.domesticOrder(data).then(({ data, status }) => {
+            if(status === 200){
+                resolve(data, true);
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
 // Authenticate and Authorize user
-export const Authenticate_User = ({ commit }, accessToken) => {
+export const Authenticate_User = ({commit}, accessToken) => {
+    console.log(commit);
     return new Promise( async (resolve, reject) => {
         await User.auth(accessToken).then(({data, status}) => {
             if(status === 200){
@@ -157,6 +254,111 @@ export const getOrders = ({ commit }, user) => {
     })
 }
 
+// add Purchase Order
+export const addPurchaseOrder = ({ commit }, payload) => {
+    return new Promise( async (resolve, reject) => {
+        commit('LOADING');
+        await User.addPurchaseOrder(payload).then(({data, status}) =>{
+            if(status === 201){
+                resolve(data, true);
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+
+// get specific user purchase order
+export const getPurchaseOrders = ({ commit }, user) => {
+    return new Promise( async (resolve, reject) => {
+        commit('AUTH_INIT');
+       await User.purchaseOrder(user).then(({data, status}) => {
+            if(status === 200){
+                resolve(data, true);
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+
+// delete specific user purchase
+export const placePurchaseOrder = ({ commit }, {token, id, total}) => {
+    console.log(total);
+    return new Promise( async (resolve, reject) => {
+        commit('AUTH_INIT');
+       await User.placepurchaseorder(token, id, { total }).then(({status}) => {
+            if(status === 200){
+                resolve(true);
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+
+// delete specific user purchase
+export const deletePurchaseOrder = ({ commit }, {token, id}) => {
+    return new Promise( async (resolve, reject) => {
+        commit('AUTH_INIT');
+       await User.deletepurchase(token, id).then(({status}) => {
+            if(status === 200){
+                resolve(true);
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+
+//  ################# ONLY PURCHASE #################
+// add ONLY Purchase 
+export const addOnlyPurchase = ({ commit }, payload) => {
+    return new Promise( async (resolve, reject) => {
+        commit('LOADING');
+        await User.addOnlyPurchase(payload.token, payload.data).then(({data, status}) =>{
+            if(status === 201){
+                resolve(data, true);
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+
+// get specific user Only purchase
+export const getOnlyPurchase = ({ commit }, accessToken) => {
+    return new Promise( async (resolve, reject) => {
+        commit('AUTH_INIT');
+       await User.onlyPurchase(accessToken).then(({data, status}) => {
+            if(status === 200){
+                resolve(data, true);
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+
+// user Only purchase payment
+export const placeOnlyPurchase = ({ commit }, {token, id, total}) => {
+    return new Promise( async (resolve, reject) => {
+        commit('AUTH_INIT');
+       await User.placeOnlypurchaseOrder(token, id, { total }).then(({status}) => {
+            if(status === 200){
+                resolve(true);
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+// delete specific user Only purchase
+export const deleteOnlyPurchase = ({ commit }, {token, id}) => {
+    return new Promise( async (resolve, reject) => {
+        commit('AUTH_INIT');
+       await User.deleteOnlyPurchase(token, id).then(({status}) => {
+            if(status === 200){
+                resolve(true);
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+
 // Register User
 export const registerUser = ({ commit }, user) => {
     return new Promise( async (resolve, reject) => {
@@ -180,7 +382,7 @@ export const logoutUser = ({ commit }) => {
 
 
 // GET COUNTRIES
-export const getCountries = ({ commit }) => {
+export const getCountries = () => {
     return new Promise(async (resolve, reject) => {
         await Public_api.allCountries().then(({status, data}) => {
             if(status == 200){
@@ -257,8 +459,8 @@ export const updateAffiliate = ({ commit }, {referralid, email}) => {
 }
 
 
-export const Authenticate_Admin = ({ commit }, accessToken) => {
-
+export const Authenticate_Admin = ({commit}, accessToken) => {
+    console.log(commit);
     return new Promise( async (resolve, reject) => {
         await Admin.auth(accessToken).then(({data, status}) => {
             if(status === 200){
@@ -296,8 +498,22 @@ export const loginAdmin = ({ commit }, admin) => {
 
 // Get All Users (Admin privilege)
 export const getAllData = ({ commit }, { accessToken }) => {
+    commit('RESET');
     return new Promise( async (resolve, reject) => {
         await Admin.getAllData(accessToken).then(({status, data}) => {
+            if(status === 200){
+                resolve(data, true);
+            }
+        })
+        .catch(error => reject(error))
+    })
+}
+
+// Update Shipment (Admin Privilege)
+export const updateShipment = ({ commit }, { accessToken, orderId } ) => {
+    commit('LOADING');
+    return new Promise( async (resolve, reject) => {
+        await Admin.updateDomesticOrder(accessToken, orderId).then(({status, data}) => {
             if(status === 200){
                 resolve(data, true);
             }
