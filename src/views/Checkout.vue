@@ -1,4 +1,4 @@
-<template >
+<template v-if="render">
   <div>
     <Header />
     <div class="container">
@@ -23,11 +23,19 @@
               </div>
               <div>
                 <h6 class="my-0">{{ item.product.name }}</h6>
-                <p class="mt-2">Qty: {{ item.qty }}</p>
+                <p class="mt-2">
+                  Qty:
+                  <b>{{ item.qty }}</b>
+                </p>
+                <p class="mt-2">
+                  weight:
+                  <b>{{ item.product.weight }}kg</b>
+                </p>
               </div>
               <div>
                 <h6 class="my-0">
-                  <strong>{{ item.product.price | toCurrency }}</strong>
+                  <strong v-if="d_to_n">{{ convertCurrency(item.totalprice) | toCurrency }}</strong>
+                  <strong v-else>{{ item.totalprice | toCurrency }}</strong>
                 </h6>
               </div>
             </li>
@@ -35,12 +43,16 @@
 
           <ul class="list-group mb-3">
             <li class="list-group-item d-flex justify-content-between">
-              <span>Shipping Fee</span>
-              <strong>{{fee}}%</strong>
+              <span>Shipping Cost</span>
+              <strong v-if="d_to_n">{{ convertCurrency(shippingCost) | toCurrency}}</strong>
+              <strong v-else>{{ shippingCost | toCurrency}}</strong>
             </li>
             <li class="list-group-item d-flex justify-content-between">
               <span>Total</span>
-              <strong>{{ percentage(totalItemPrice, fee) | toCurrency }}</strong>
+              <strong
+                v-if="d_to_n"
+              >{{ convertCurrency(totalItemPrice + shippingCost) | toCurrency }}</strong>
+              <strong v-else>{{ totalItemPrice + shippingCost | toCurrency }}</strong>
             </li>
             <li class="list-group-item d-flex justify-content-between">
               <span>Delivery Method</span>
@@ -66,7 +78,7 @@
           <b-alert show variant="danger" v-if="log.msgError && !log.message == ''">{{ log.message }}</b-alert>
 
           <mdb-container class="mt-5">
-            <form class="needs-validation" novalidate @submit="checkForm">
+            <form ref="userForm" class="needs-validation" novalidate @submit="checkForm">
               <div class="form-row">
                 <div class="col mb-3">
                   <label for="firstname">First name</label>
@@ -93,7 +105,14 @@
               </div>
               <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" v-model="form.email" required />
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  v-model="form.email"
+                  required
+                />
                 <div
                   class="invalid-feedback"
                 >Please provide a valid email address for shipping update.</div>
@@ -159,7 +178,7 @@
                 </div>
               </div>
               <mdb-btn type="submit" color="primary">
-                <b-spinner small v-if="log.loading"></b-spinner>Continue
+                Continue
                 <b-icon icon="chevron-right"></b-icon>
               </mdb-btn>
             </form>
@@ -168,16 +187,16 @@
       </b-row>
 
       <b-modal
-        style="padding: 0;"
-        id="modal-prevent-closing"
+        style="padding: 0; text-align: center"
         ref="paymentModal"
         hide-header
         hide-footer
         no-stacking
+        no-close-on-backdrop
         ok-disabled
-        size="md"
+        size="sm"
       >
-        <object type="text/html" :data="authorization_url" style="width:100%; height:500px;"></object>
+        <object type="text/html" :data="authorization_url" style="width:100%; height:600px;"></object>
       </b-modal>
 
       <b-modal
@@ -229,14 +248,16 @@ export default {
   },
   data() {
     return {
+      render: 0,
       error: null,
       valid: null,
-      fee: null,
+      shippingCost: null,
       newUser: false,
       authorization_url: null,
       reference: null,
       checkTransaction: null,
       toastCount: 0,
+      countDown: 1200,
       form: {
         firstname: "",
         lastname: "",
@@ -257,14 +278,41 @@ export default {
       options: [],
     };
   },
+  watch: {
+    form(oldvalue, newValue) {
+      if (localStorage.getItem("isAuthorized")) {
+        if (newValue.email == "" || newValue.email == undefined) {
+          this.form = this.$store.state.user;
+        }
+      }
+    },
+    countDown: function (newValue, oldValue) {
+      if (newValue === 0) {
+        this.stopTransactionCheck();
+        this.$refs["paymentModal"].hide();
+
+        if (this.countDown === 0) {
+          this.makeToast("warning", "Timeout! Try again", true);
+          this.countDown = 1200;
+        }
+
+        this.$store.commit("RESET");
+        console.log("timeout!");
+      }
+    },
+  },
   created() {
+    this.render = true;
+    this.render = false;
+  },
+  mounted() {
+    this.shippingFee();
+    
     this.$store.watch(
       (state) => {
-        console.clear(state);
         return this.$store.state.transaction; // could also put a Getter here
       },
       (newTrans, oldTrans) => {
-        console.clear(oldTrans);
         //something changed do something
         if (newTrans === "success") {
           this.stopTransactionCheck();
@@ -298,16 +346,11 @@ export default {
             location.reload();
           }, 3000);
         } else if (newTrans === "warning") {
-          this.makeToast(
-            "warning",
-            this.log.message,
-            true
-          );
+          this.makeToast("warning", this.log.message, true);
         }
       }
     );
 
-    this.fee = this.settings.commitions.shipping;
     this.options = this.settings.shippingmethods;
     this.delivery = this.settings.shippingmethods[0];
     if (
@@ -342,8 +385,8 @@ export default {
       });
   },
   computed: {
-    ...mapState(["settings", "log", "cart", "user", "currencyType"]),
-    ...mapGetters(["totalItemPrice"]),
+    ...mapState(["settings", "log", "cart", "user", "currencyType", "d_to_n"]),
+    ...mapGetters(["totalItemPrice", "cartWeight"]),
   },
   methods: {
     sendToLogin() {
@@ -380,7 +423,7 @@ export default {
           currency: this.currency,
           reference: this.reference,
           deliverymethod: this.delivery,
-          total: this.percentage(this.totalItemPrice, this.fee),
+          total: this.totalItemPrice + this.shippingCost,
           date: new Date(),
         };
         if (this.log.isUserActive === false) {
@@ -400,7 +443,7 @@ export default {
                 user: this.form,
                 currency: this.currency,
                 deliverymethod: this.delivery,
-                total: this.percentage(this.totalItemPrice, this.fee),
+                total: this.totalItemPrice + this.shippingCost,
                 reference: this.reference,
                 date: new Date(),
               };
@@ -410,14 +453,18 @@ export default {
                     console.log("success");
                     this.stopTransactionCheck();
                   } else {
-                    console.log("not verifed!");
+                    this.countDown--;
+                    console.log("not verifed: " + this.countDown);
                   }
                 });
               }, 5000);
             })
-            .catch((error) =>
-              this.$store.commit("logServerErr", error.response.data.message)
-            );
+            .catch((error) => {
+              if (data === "undefined") {
+                console.log("failed");
+              }
+              this.$store.commit("logServerErr", error.response.data.message);
+            });
         }
       } else {
         console.log("invalid!");
@@ -430,18 +477,21 @@ export default {
     updateUserData() {
       let token = localStorage.getItem("accessToken");
       let data = {
-          cart: this.cart,
-          user: this.form,
-          currency: this.currency,
-          reference: this.reference,
-          deliverymethod: this.delivery,
-          total: this.percentage(this.totalItemPrice, this.fee),
-          date: new Date(),
-        };
+        cart: this.cart,
+        user: this.form,
+        currency: this.currency,
+        reference: this.reference,
+        deliverymethod: this.delivery,
+        total: this.totalItemPrice + this.shippingCost,
+        date: new Date(),
+      };
       // save order
-      this.$store.dispatch("placeDomesticOrder", data)
-      .then(() => this.$store.commit("RESET"))
-      .catch(error => this.$store.commit("logServerErr", error.response.data.message));
+      this.$store
+        .dispatch("placeDomesticOrder", data)
+        .then(() => this.$store.commit("RESET"))
+        .catch((error) =>
+          this.$store.commit("logServerErr", error.response.data.message)
+        );
 
       // update User data
       this.$store
@@ -525,7 +575,7 @@ export default {
         currency: this.currency,
         reference: this.reference,
         deliverymethod: this.delivery,
-        total: this.percentage(this.totalItemPrice, this.fee),
+        total: this.totalItemPrice + this.shippingCost,
         date: new Date(),
       };
 
@@ -575,7 +625,7 @@ export default {
                 user: this.form,
                 currency: this.currency,
                 deliverymethod: this.delivery,
-                total: this.percentage(this.totalItemPrice, this.fee),
+                total: this.totalItemPrice + this.shippingCost,
                 reference: this.reference,
                 date: new Date(),
               };
@@ -616,9 +666,11 @@ export default {
           this.$store.commit("logServerErr", error.response.data.message)
         );
     },
-    percentage(num, per) {
-      let percent = (num / 100) * per;
-      return parseInt(percent) + parseInt(num);
+    shippingFee(){
+      // return kg * this.settings.commission.kg;
+      let totalKg = this.cart.map(p => p.product.weight).reduce((a, c) => { return a + c });
+      let qty = this.cart.map(p => p.qty).reduce((a, c) => { return a + c });
+      this.shippingCost = (totalKg * qty) * this.settings.commission.kg;
     },
     makeToast(variant = null, msg, append = false) {
       this.toastCount++;
@@ -629,12 +681,21 @@ export default {
         autoHideDelay: 6000,
         appendToast: append,
       });
-    }
+    },
+    convertCurrency(amount) {
+      // convert amount to dollar
+      let d = this.settings.rates[0].d_to_n;
+      return Math.round((amount * 1000) / d / 1000);
+    },
   },
 };
 </script>
 
 <style scoped>
+body,
+html {
+  overflow: hidden;
+}
 .btn {
   margin: 0 !important;
 }
@@ -690,5 +751,11 @@ hr {
 .btn-primary.focus,
 .btn-primary:focus {
   box-shadow: 0 8px 25px -8px #ea5376 !important;
+}
+.modal-body {
+  text-align: center;
+}
+.modal-backdrop {
+  z-index: 5 !important;
 }
 </style>

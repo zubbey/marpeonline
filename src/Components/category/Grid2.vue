@@ -75,7 +75,7 @@
           <div class="col-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 my-4">
             <b-button type="button" @click="incNigCardNumber" variant="outline">More +</b-button>
           </div>
-          <Breadc :label="'Featured Products from 1688'" />
+          <Breadc :label="'Products On Preorders'" />
           <div
             v-if="this.productsIn1688 == 0"
             class="col-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 card-section"
@@ -170,8 +170,7 @@ export default {
 
       if (this.nigeriaProduct.length === 1 || this.chinaProduct.length === 1) {
         this.cardColumn = {
-          flex: "0 0 66.666667%",
-          "max-width": "66.666667%"
+          "min-width": "max-content"
         };
       } else {
         this.cardColumn = {};

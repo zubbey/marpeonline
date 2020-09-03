@@ -94,7 +94,7 @@ export default {
           href: "/user/" + this.id + "/"
         },
         {
-          text: "Account History",
+          text: "My Wallet",
           href: "/user/" + this.id + "/My Wallet"
         }
       ],

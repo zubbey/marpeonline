@@ -4,7 +4,10 @@
       <div class="container">
         <div class="row">
           <div class="col-12 col-md-6">
-            <p class="small"><b-icon icon="envelope"></b-icon> support@marpe.online |  <b-icon icon="phone"></b-icon> +234 812 377 1335</p>
+            <p class="small">
+              <b-icon icon="envelope"></b-icon>support@marpe.online |
+              <b-icon icon="phone"></b-icon>+234 812 377 1335
+            </p>
           </div>
 
           <div class="col-12 col-md-6 text-right">
@@ -13,154 +16,100 @@
         </div>
       </div>
     </div>
-    <nav class="navbar navbar-light" style="z-index: 5000">
-      <div class="dropdown d-xl-none d-lg-none mr-auto">
-        <img
-          src="https://img.icons8.com/ios-filled/50/000000/menu.png"
-          style="width: 25px"
-          data-toggle="dropdown"
-          data-target="#navd"
-          aria-haspopup="true"
-          aria-expanded="false"
-        />
-        <div class="dropdown-menu hb" aria-labelledby="navd">
-          <form @submit.prevent="searchEntered()">
-            <div class="row">
-              <div class="col">
-                  <input
-                    type="search"
-                    class="form-control"
-                    v-model="keyword"
-                    ref="keyword"
-                    placeholder="Search Marpe Product eg: mobile phone"
-                  />
-                  <button type="submit" class="input-group-text" id="primary">
-                    <mdbIcon icon="search"/>
-                  </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-      <!--Logo-->
-      <router-link to="/" class="navbar-brand py-0">
-        <img src="@/assets/logo.png" height="50" />
-      </router-link>
-      <!--Header navigation-->
-      <span class="navbar-item bc d-none d-xl-block d-lg-block w-50 ml-4 py-0">
-          <form @submit.prevent="searchEntered()">
-            <div class="row">
-              <div class="col d-flex justify-content-between align-items-center">
-                  <input
-                    type="search"
-                    class="form-control"
-                    v-model="keyword"
-                    ref="keyword"
-                    placeholder="Search Marpe Product eg: mobile phone"
-                  />
-                  <span class="pl-2">
-                    <mdbIcon icon="search"/>
-                  </span>
-              </div>
-            </div>
-          </form>
-      </span>
-      <p class="navbar-item ml-auto"></p>
-      <li class="nav-item dropdown">
-        <div
-          class="nav-link dropdown-toggle"
-          href="#"
-          id="navbarDropdown"
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+          <img src="@/assets/logo.png" width="auto" height="50" />
+        </a>
+
+        <a
           role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
+          class="navbar-burger burger"
+          :class="mobileMenu ? 'is-active' : ''"
+          aria-label="menu"
           aria-expanded="false"
-        >{{currencyType.name}}</div>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <div
-            v-for="(currency, index) in settings.currencyType"
-            :key="index"
-            class="dropdown-item"
-            @click="changeCurrency(currency.currency)"
-          >{{ currency.name }}</div>
-        </div>
-      </li>
-      <div v-if="!log.isUserActive" class="user">
-        <div class="nav-item dropdown">
-          <div
-            class="dropdown-toggle"
-            style="cursor: pointer;"
-            id="navbarDropdownMenuLink"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <b-icon icon="person"></b-icon>Account
+          data-target="navbarBasicExample"
+          @click="mobileMenu = !mobileMenu"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu" :class="mobileMenu ? 'is-active' : ''">
+        <div class="navbar-start">
+          <div class="field has-addons">
+            <p class="control is-expanded" style="margin-bottom: 0 !important">
+              <input
+                class="input p-0"
+                style="width: 470px"
+                type="search"
+                ref="keyword"
+                placeholder="Search Marpe Product eg: mobile phone"
+                @keydown.enter="searchEntered"
+                v-model="keyword"
+              />
+            </p>
+            <p class="control" style="margin-bottom: 0 !important">
+              <button class="btn-primary" style="border-radius: 0 !important" @click="searchEntered">
+                <b-icon icon="search"></b-icon>
+              </button>
+            </p>
           </div>
-          <div
-            class="dropdown-menu dropdown-menu-right"
-            style="background-color: transparent; border: none"
-            aria-labelledby="navbarDropdownMenuLink"
-          >
-            <div class="card bg-white">
-              <div class="card-text text-center pt-3">Welcome to Marpe online</div>
-              <div class="card-body d-flix" style="justify-content: space-between">
-                <router-link to="/login">
-                  <button type="button" class="btn btn-outline-secondary btn-block btn-sm">Login</button>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">{{currencyType.name}}</a>
+
+            <div class="navbar-dropdown">
+              <a
+                class="navbar-item"
+                v-for="(currency, index) in getDollarNaira"
+                :key="index"
+                @click="changeCurrency(currency.currency)"
+              >{{ currency.name }}</a>
+            </div>
+          </div>
+
+          <div class="navbar-item" v-if="!log.isUserActive">
+            <div class="buttons">
+              <router-link class="button is-primary" to="/register">
+                <strong>Sign up</strong>
+              </router-link>
+              <router-link class="button is-light" to="/login">Log in</router-link>
+            </div>
+          </div>
+
+          <div class="navbar-item" v-else>
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">
+                <b-icon icon="person"></b-icon>
+                {{ user.firstname }}
+              </a>
+
+              <div class="navbar-dropdown">
+                <router-link :to="`/user/${user.slug}/overview?welcome=true`" class="navbar-item">
+                  <b-icon icon="grid1x2"></b-icon>Dashboard
                 </router-link>
-                <router-link to="/register">
-                  <button type="button" class="btn btn-primary btn-block btn-sm m-0">Create Account</button>
+                <router-link :to="`/user/${user.slug}/wishlist`" class="navbar-item">
+                  <b-icon icon="heart"></b-icon>My Wishlist
                 </router-link>
+                <div class="navbar-item logout" @click="logout">
+                  <b-icon icon="power"></b-icon>Logout
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div v-if="log.isUserActive" class="user">
-        <div class="nav-item dropdown">
-          <div
-            class="dropdown-toggle"
-            style="cursor: pointer;"
-            id="navbarDropdownMenuLink"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <b-icon icon="person"></b-icon>
-            {{ user.firstname }}
-          </div>
-          <div
-            class="dropdown-menu dropdown-menu-right"
-            style="background-color: transparent; border: none"
-            aria-labelledby="navbarDropdownMenuLink"
-          >
-            <div class="card bg-white p-3">
-              <router-link :to="`user/${user.slug}/overview`">
-                <button type="button" class="btn btn-outline-secondary btn-block btn-sm">
-                  <b-icon icon="grid1x2"></b-icon>Dashboard
-                </button>
-              </router-link>
-              <button type="button" class="btn btn-outline-secondary btn-block btn-sm">
-                <b-icon icon="heart"></b-icon>My Wishlist
-              </button>
-              <button
-                type="submit"
-                class="btn btn-outline-secondary btn-block btn-sm"
-                @click="logout"
-              >Logout</button>
+          <div class="bag navbar-item" @click="openCart">
+            <div class="pb-1">
+              <b-icon icon="cart3" font-scale="2"></b-icon>
             </div>
+            <span class="mb-3" v-if="cart.length > 0">{{ cart.length }}</span>
           </div>
         </div>
-      </div>
-
-      <div class="bag" @click="openCart">
-        <div class="pb-1">
-          <b-icon icon="cart3" font-scale="2"></b-icon>
-        </div>
-        <span class="mb-3" v-if="cart.length > 0">{{ cart.length }}</span>
       </div>
     </nav>
 
@@ -171,9 +120,9 @@
 
 <script>
 // import * as $ from "jquery";
-import { mdbIcon, mdbFormInline, mdbInput } from 'mdbvue';
+import { mdbIcon, mdbFormInline, mdbInput } from "mdbvue";
 import Cart from "@/Components/Cart.vue";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: "Header",
@@ -181,30 +130,39 @@ export default {
     Cart,
     mdbIcon,
     mdbFormInline,
-    mdbInput
+    mdbInput,
   },
   data() {
     return {
+      mobileMenu: false,
       keyword: null,
-      comfirmPassword: ""
+      comfirmPassword: "",
     };
   },
   mounted() {},
   computed: {
-    ...mapState(["cart", "user", "log", "settings", "currencyType"])
+    ...mapState([
+      "cart",
+      "user",
+      "log",
+      "settings",
+      "categories",
+      "currencyType",
+    ]),
+    ...mapGetters(["getDollarNaira"]),
   },
   methods: {
-    searchEntered(){
-      if(this.$refs.keyword.value.length > 3){
-        this.$router.replace({name: 'Search', query: {q: this.keyword}})
+    searchEntered() {
+      if (this.$refs.keyword.value.length > 3) {
+        this.$router.replace({ name: "Search", query: { q: this.keyword } });
       }
     },
     changeCurrency(newCurrency) {
       let currentCurrency = this.currencyType.currency;
       this.$store
         .dispatch("changeCurrency", { newCurrency, currentCurrency })
-        .then(data => this.$store.commit("CHANGE_CURRENCY", data))
-        .catch((error) => console.error(error));
+        .then((data) => this.$store.commit("CHANGE_CURRENCY", data))
+        .catch((error) => console.log(error));
     },
     openCart() {
       this.$refs.cartMove.cartON();
@@ -214,8 +172,8 @@ export default {
       this.$store.dispatch("logoutUser").then(() => {
         localStorage.removeItem("isAuthorized");
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -223,32 +181,38 @@ export default {
 .body {
   background: #f9f9f9 !important;
 }
-a {
-  color: #ea5376 !important;
-}
 a:hover {
   text-decoration: none !important;
   color: #b83658 !important;
 }
-.dropdown, .dropleft, .dropright, .dropup {
-    list-style: none !important;
+.dropdown,
+.dropleft,
+.dropright,
+.dropup {
+  list-style: none !important;
 }
 .bag span {
-    background-color: #ea5376 !important;
+  background-color: #ea5376 !important;
 }
-.form-control:focus{
+.form-control:focus {
   box-shadow: none !important;
 }
-.custom-select{
+.custom-select {
   border-color: #ea5376 !important;
 }
-.custom-select:focus{
+.custom-select:focus {
   box-shadow: none !important;
 }
 button#primary {
-    background-color: #ea5376;
-    color: white;
-    padding: 10px;
+  background-color: #ea5376;
+  color: white;
+  padding: 10px;
+}
+.button.is-primary {
+  background-color: #ea5376 !important;
+}
+.navbar-menu {
+  align-items: center !important;
 }
 .btn-primary.focus,
 .btn-primary:focus {
@@ -294,6 +258,24 @@ button#primary {
 .btn-outline-dark:hover {
   color: #b17c7c !important;
   background-color: transparent;
+}
+.input, .textarea, .select select {
+    border-color: #f1efef !important;
+}
+.input:focus,
+.textarea:focus,
+.select select:focus,
+.is-focused.input,
+.is-focused.textarea,
+.select select.is-focused,
+.input:active,
+.textarea:active,
+.select select:active,
+.is-active.input,
+.is-active.textarea,
+.select select.is-active {
+  border: none !important;
+  box-shadow: none !important;
 }
 .form-control:focus {
   border-color: #ea5376 !important;

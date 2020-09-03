@@ -1,5 +1,5 @@
 <template>
-  <div class="m-auto text-center">
+  <div class="">
   <h5 style="color: #b9b9b9" class="pb-4 text-center font-weight-bold">{{label}}</h5>
 </div>
 </template>

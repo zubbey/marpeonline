@@ -8,27 +8,15 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import adminHeader from "@/Components/adminHeader.vue";
 export default {
   props: ["id"],
   components: {
     adminHeader
   },
-  created(){
-    this.getAllData({
-      accessToken: localStorage.getItem('accessToken')
-    })
-    .then(data => {
-      this.$store.commit('SET_ADMIN_DATA', data)
-    })
-    .catch(error => console.log(error))
-  },
   computed: {
     ...mapState(["user", "log", "cart"])
-  },
-  methods: {
-    ...mapActions(["getAllData"])
   }
 };
 </script>

@@ -15,7 +15,7 @@
                 <b-icon stacked icon="people" scale="0.5"></b-icon>
               </b-iconstack>
             </div>
-            <h3>{{ totalUsers }}</h3>
+            <h3 class="title is-4 text-white">{{ allUsers }}</h3>
             <b-card-footer style="background-color: rgba(0,0,0,.03) !important">
               <span class="float-left">View Customers</span>
               <span class="float-right">
@@ -35,7 +35,7 @@
                 <b-icon stacked icon="cart3" scale="0.5"></b-icon>
               </b-iconstack>
             </div>
-            <h3>{{ totalOrders }}</h3>
+            <h3 class="title is-4 text-white">{{ allOrders }}</h3>
             <b-card-footer style="background-color: rgba(0,0,0,.03) !important">
               <span class="float-left">View Orders</span>
               <span class="float-right">
@@ -55,7 +55,7 @@
                 <b-icon stacked icon="box" scale="0.5"></b-icon>
               </b-iconstack>
             </div>
-            <h3>{{ totalProducts }}</h3>
+            <h3 class="title is-4 text-white">{{ allProducts }}</h3>
             <b-card-footer style="background-color: rgba(0,0,0,.03) !important">
               <span class="float-left">View Products</span>
               <span class="float-right">
@@ -75,7 +75,7 @@
                 <b-icon stacked icon="wallet2" scale="0.5"></b-icon>
               </b-iconstack>
             </div>
-            <h3>$0.00</h3>
+            <h3 class="title is-4 text-white">$0.00</h3>
             <b-card-footer style="background-color: rgba(0,0,0,.03) !important">
               <small class="float-left">View Revenue</small>
               <span class="float-right">
@@ -107,12 +107,11 @@
             tag="article"
             style="max-width: 20rem;"
             class="mb-2"
-            img-src="https://i.imgur.com/4GBliSd.png"
             img-alt="Card image"
             img-bottom
           >
             <b-card-text>
-              <h3>0</h3>
+              <h3 class="title is-4">{{ adminData.carts.length }}</h3>
             </b-card-text>
           </b-card>
         </b-col>
@@ -123,12 +122,11 @@
             tag="article"
             style="max-width: 20rem;"
             class="mb-2"
-            img-src="https://i.imgur.com/4GBliSd.png"
             img-alt="Card image"
             img-bottom
           >
             <b-card-text>
-              <h3>0</h3>
+              <h3 class="title is-4">0</h3>
             </b-card-text>
           </b-card>
         </b-col>
@@ -144,7 +142,7 @@
               <div class="table-responsive">
                 <table class="table table-bordered table-wrapper" id="dataTable" width="100%" cellspacing="0">
                   <tbody>
-                    <tr v-for="(users, i) in referredUsers" :key="i">
+                    <tr v-for="(users, i) in allReferredUsers" :key="i">
                       <td>
                           <span class="d-flex align-items-center">
                             <b-avatar variant="primary" v-bind:text="getLastFirst(users.firstname, users.lastname)" class="mr-3"></b-avatar>
@@ -162,7 +160,7 @@
       </b-row>
 
       <b-row>
-        <b-col>
+        <b-col v-if="activeUsers.length > 0">
           <b-card
           title="Active Users"
           >
@@ -185,7 +183,7 @@ import Breadcrumb from "@/Components/userPage/Breadcrumb.vue";
 import Footer from "@/Components/userPage/UserFooter.vue";
 import ChartBar from "@/Components/admin/chart-bar.vue";
 import ChartDoughnut from "@/Components/admin/chart-doughnut.vue";
-// import ChartLine from "@/Components/admin/chart-line.vue";
+import ChartLine from "@/Components/admin/chart-line.vue";
 import { mapState, mapGetters } from "vuex";
 export default {
   name: "adminoverview",
@@ -193,7 +191,7 @@ export default {
   components: {
     ChartBar,
     ChartDoughnut,
-    // ChartLine,
+    ChartLine,
     Breadcrumb,
     Footer
   },
@@ -209,7 +207,10 @@ export default {
           href: "/admin/" + this.id + "/overview"
         }
       ],
-
+      allUsers: 0,
+      allOrders: 0,
+      allProducts: 0,
+      allReferredUsers: [],
       labels: ["Search Engine", "Direct Click", "Bookmark Clik"],
       datasets: [
         {
@@ -226,19 +227,27 @@ export default {
       },
 
       fields: ['status', 'name', 'email', 'activity'],
-      activeUsers: [
-        { isActive: true, name: 'Dickerson Macdonald', email: 'dickerson@email.com', activity: 'last login: ' + new Date().toLocaleDateString()},
-        { isActive: false, name: 'Larsen Shaw', email: 'dickerson@email.com',  activity: 'last login: ' + new Date().toLocaleDateString() },
-        { isActive: false, name: 'Geneva Wilson', email: 'dickerson@email.com',  activity: 'last login: ' + new Date().toLocaleDateString()},
-        { isActive: true, name: 'Jami Carney', email: 'dickerson@email.com',  activity: 'last login: ' + new Date().toLocaleDateString() }
-      ]
+      activeUsers: []
     };
   },
   mounted() {
+    if(this.totalUsers > 0){
+      this.allUsers = this.totalUsers
+    }
+    if(this.totalProducts > 0){
+      this.allProducts = this.totalProducts
+    }
+    if(this.totalOrders > 0){
+      this.allOrders = this.totalOrders
+    }
+    if(this.referredUsers.length > 0){
+      this.allReferredUsers = this.referredUsers
+    }
+    console.log(this.referredUsers);
   },
   computed: {
-    ...mapState(["user", "log", "cart"]),
-    ...mapGetters(["registerd", "totalUsers", "totalProducts", "referredUsers", "totalOrders"]),
+    ...mapState(["user", "log", "adminData"]),
+    ...mapGetters(["totalUsers", "totalProducts", "referredUsers", "totalOrders"]),
     chartOptions () {
       if (!this.chartsLib) return null
       return this.chartsLib.charts.Bar.convertOptions({

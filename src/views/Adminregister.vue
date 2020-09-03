@@ -137,7 +137,7 @@ export default {
             password: this.password
           })
           .then(success => {
-            localStorage.setItem("accessToken", success.accessToken);
+            localStorage.setItem("adminAccessToken", success.accessToken);
             this.$store.commit("SUCCESS", success);
           })
           .catch(error =>

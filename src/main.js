@@ -9,16 +9,22 @@ import Vuelidate from 'vuelidate'
 import VueContentPlaceholders from 'vue-content-placeholders'
 import Skeleton from 'vue-loading-skeleton'
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
+import VueLogger from 'vuejs-logger';
+import numeral from "numeral";
+import CKEditor from '@ckeditor/ckeditor5-vue';
+
 // import 'VueCharts'
 import 'chart.js'
 import 'hchs-vue-charts'
 // import 'bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css'
+// import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'bootstrap-css-only/css/bootstrap.min.css'
 import 'mdbvue/lib/css/mdb.min.css'
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css'
 import 'vue-bootstrap4-table'
+import 'bulma/css/bulma.css'
+
 // import carousel
 Vue.use(Viewer)
 Vue.use(VueLazyload, {
@@ -31,10 +37,10 @@ Vue.use(Skeleton)
 Vue.use(window.VueCharts)
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
+Vue.use(CKEditor)
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
-import VueLogger from 'vuejs-logger';
 const isProduction = process.env.NODE_ENV === 'production';
 
 const options = {
@@ -73,6 +79,9 @@ var filter = function(text, length, clamp){
 
 Vue.filter('truncate', filter);
 
+Vue.filter('numeral', function (value) {
+  return numeral(value).format('0,0');
+})
 new Vue({
   router, store,
   render: h => h(App),

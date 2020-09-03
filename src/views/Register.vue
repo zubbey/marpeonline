@@ -123,9 +123,13 @@
         >Both password did not match.</b-form-invalid-feedback>
       </div>
 
-      <b-button block variant="primary" type="submit">
-        <b-spinner small type="grow" v-if="log.loading"></b-spinner>Sign up
+      <b-button block variant="primary" type="submit" v-if="!log.loading" :disabled=" password.length < 6">
+        Sign up
       </b-button>
+      <b-button block variant="primary" v-else disabled>
+        <b-spinner small type="grow"></b-spinner>Please Wait
+      </b-button>
+      
       <router-link to="/login">
         <b-button block variant="outline mt-2">Aready have an account?</b-button>
       </router-link>
@@ -196,7 +200,7 @@ export default {
     this.date = this.getYear;
   },
   computed: {
-    ...mapState(["log"]),
+    ...mapState(["log", "toast"]),
 
     validation() {
       return {
@@ -253,18 +257,24 @@ export default {
                 .then(success => {
                   localStorage.setItem("accessToken", success.accessToken);
                   this.$store.commit("SUCCESS", success);
+                  this.makeToast("success", this.toast.message, true);
                 })
                 .then(() => (this.modalShow = true))
-                .catch(error =>
+                .catch(error => {
                   this.$store.commit("logServerErr", error.response.data.message)
-                );
+                  this.makeToast("danger", this.toast.message, true);
+                });
             })
-            .catch(error => this.$store.commit("logServerErr", error.response.data.message))
+            .catch(error => {
+              this.$store.commit("logServerErr", error.response.data.message)
+              this.makeToast("danger", this.toast.message, true);
+            });
             // after successfully registeration, update affiliate[] (push user to affiliate)
         })
         .catch(error => {
             // return error msg
-            this.$store.commit("logServerErr", error.response.data.message)
+            this.$store.commit("logServerErr", error.response.data.message);
+            this.makeToast("danger", this.toast.message, true);
             this.referralCodeErrorMsg = error.response.data.message;
             this.referralCodeError = false;
         })
@@ -284,15 +294,57 @@ export default {
           .then(success => {
             localStorage.setItem("accessToken", success.accessToken);
             this.$store.commit("SUCCESS", success);
+            this.makeToast("success", this.toast.message, true);
           })
           .then(() => (this.modalShow = true))
-          .catch(error =>
+          .catch(error => {
             this.$store.commit("logServerErr", error.response.data.message)
-          );
+            this.makeToast("danger", this.toast.message, true);
+          });
     },
 
     login() {
       this.$router.push("/login");
+    },
+
+    // toast
+    makeToast(variant = null, msg, append = false) {
+      let color = '';
+      switch (variant) {
+        case 'success':
+          color = '#a0e689';
+          break;
+        case 'danger':
+          color = '#ff5555';
+          break;
+        case 'warning':
+          color = '#f3c744';
+          break;
+
+        default:
+          color = '#649aff';
+          break;
+      }
+      // Create the title
+      const h = this.$createElement;
+      const template = h(
+        'div',
+        { class: ['d-flex', 'flex-grow-1', 'align-items-baseline'] },
+        [
+          h('b-img', { class: 'mr-2', style: `background-color: ${color}; width: 12px; height: 12px;`}),
+          h('strong', { class: 'mr-auto' }, 'Notice!'),
+          h('small', { class: 'text-muted mr-2' }, `${new Date().getSeconds()} seconds ago`)
+        ]
+      )
+      this.toastCount++;
+      this.$bvToast.toast(msg, {
+        title: template,
+        variant: variant,
+        solid: true,
+        toaster: 'b-toaster-top-right',
+        autoHideDelay: 8000,
+        appendToast: append,
+      });
     }
   }
 };

@@ -3,28 +3,35 @@
     <transition-group name="fade" class="row row-cols-1 row-cols-sm-2 row-cols-md-4" tag="div">
       <div
         v-for="product in CardArray"
-        class="col pb-3"
+        class="col pb-3 card-col"
         :style="cardColumn"
         :key="product._id"
       >
-        <div class="card m-1">
-          
-          <b-img-lazy v-bind="mainProps" :src="product.thumbnail" alt="Card image" style="margin-bottom: 0 !important; margin-top: 0 !important;"></b-img-lazy>
-          <div class="overlay">
-            <b-button type="button" variant="primary" @click="addtoCart(product)">
-              <b-icon icon="cart3"></b-icon>Add to Cart
-            </b-button>
-            <router-link :to="{name: 'Product', params: {id: product.slug}}">
-              <b-button type="button" variant="outline">View Product</b-button>
-            </router-link>
+        <router-link :to="{name: 'Product', params: {id: product.slug}}">
+          <div class="card m-1">
+            <b-img-lazy
+              v-bind="mainProps"
+              :src="product.thumbnail"
+              alt="Card image"
+              style="margin-bottom: 0 !important; margin-top: 0 !important;"
+            ></b-img-lazy>
+            <div class="card-body product-card text-left">
+              <h6 class="card-title">{{ product.name | truncate(15, '...')}}</h6>
+              <h4 class="card-text color-primary">
+                <strong v-if="d_to_n">{{convertCurrency(product.price) | toCurrency }}</strong>
+                <strong v-else>{{product.price | toCurrency }}</strong>
+              </h4>
+            </div>
           </div>
-          <div class="card-body product-card text-left">
-            <h6 class="card-title">{{ product.name | truncate(18, '...')}}</h6>
-            <h4 class="card-text color-primary">
-              <strong>{{ product.price | toCurrency }}</strong>
-            </h4>
-          </div>
-        </div>
+        </router-link>
+        <b-collapse id="collapse-2" class="show">
+          <b-button v-if="inCart(product._id)" disabled type="button" variant="primary">
+            Added <b-icon icon="check2-circle"></b-icon>
+          </b-button>
+          <b-button v-else type="button" variant="primary" @click="addtoCart(product)">
+            <b-icon icon="cart3"></b-icon>Add to Cart
+          </b-button>
+        </b-collapse>
       </div>
     </transition-group>
   </div>
@@ -37,6 +44,8 @@ export default {
   name: "Card",
   data() {
     return {
+      converted: null,
+      currency: "",
       mainProps: {
         center: true,
         fluidGrow: true,
@@ -44,16 +53,19 @@ export default {
         blankColor: "#eee",
         width: 600,
         height: 400,
-        class: "my-5"
-      }
-    }
+        class: "my-5",
+      },
+    };
   },
-  mounted() {},
+  mounted() {
+    this.currency = this.currencyType.currency;
+  },
   computed: {
-    ...mapState(["user", "cart"])
+    ...mapState(["currencyType", "user", "cart", "settings", "d_to_n"]),
   },
   methods: {
     ...mapActions(["addToCart"]),
+
     addtoCart(product) {
       if (
         !localStorage.getItem("accessToken") &&
@@ -62,31 +74,46 @@ export default {
         this.addToCart({
           product: product,
           qty: 1,
+          totalprice: product.price,
           user: {
             _id: localStorage.getItem("guest_id"),
-            name: "Guest"
-          }
+            name: "Guest",
+          },
         });
       } else if (localStorage.getItem("accessToken")) {
         // if()
         this.addToCart({
           product: product,
           qty: 1,
+          totalprice: product.price,
           user: {
             _id: this.$store.state.user._id,
             email: this.$store.state.user.email,
             name: this.$store.getters.fullname,
-          }
+          },
         });
       }
-    }
-  }
+    },
+    inCart(productId){
+      let added = this.cart.filter(item => item.product._id === productId);
+      if(added.length > 0) return true;
+      else return false
+    },
+    //convert price of product base on selected currency
+    convertCurrency(amount) {
+      // convert amount to dollar
+      let d = this.settings.rates[0].d_to_n;
+      return Math.round((amount * 1000) / d / 1000);
+    },
+  },
 };
 </script>
 
 <style scoped>
 /* default primary color */
-
+.btn {
+  margin: 0 !important;
+}
 .color-primary {
   color: #ea5376 !important;
 }
@@ -96,7 +123,9 @@ export default {
 }
 /* Card Style */
 .card {
-  transition: 500ms;
+  padding: 10px;
+  cursor: pointer;
+  transition: 100ms;
   position: relative;
   overflow: hidden;
   height: 100%;
@@ -107,38 +136,39 @@ export default {
 
 .card img {
   z-index: 1;
-  height: 200px;
+  height: 150px;
   object-fit: fill;
   -o-object-fit: fill;
-  padding: 15px;
+  -webkit-object-fit: fill;
+  transition: all 200ms ease;
+}
+.card-col:hover .card img {
+  height: 120px;
+  object-fit: cover;
+  -o-object-fit: cover;
+  -webkit-object-fit: cover;
+  transition: all 200ms ease;
+}
+.card-col .show{
+  opacity: 0;
+  transition: all 2s ease;
+}
+.card-col:hover .show {
+  display: block !important;
+    transition: all 2s ease;
+  z-index: 1000;
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  opacity: 1;
+}
+.card-body {
+  padding: 1.25rem 0 0 0 !important;
 }
 
 .card button {
-  width: 140px;
-  margin-bottom: 10px;
-}
-
-.card:hover img,
-.card:hover .product-card {
-  filter: blur(40px);
-}
-
-.card:hover .overlay {
-  opacity: 1;
-}
-
-.card .overlay {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.493);
-  opacity: 0;
-  z-index: 100;
-  transition: all 0.3s ease-in;
 }
 
 .card:hover,
@@ -217,5 +247,29 @@ export default {
 .col-xl-9,
 .col-xl-auto {
   padding: 5px !important;
+}
+@media (min-width:320px){
+  .card{
+    padding: 20 !important;
+  }
+  .card img {
+    height: 200px !important;
+  }
+}
+@media only screen and (min-device-width: 480px) {
+  .card img {
+    height: 200px !important;
+  }
+  .card{
+    padding: 20 !important;
+  }
+}
+@media only screen and (min-device-width: 768px) {
+  .card img {
+    height: 200px !important;
+  }
+  .card{
+    padding: 20 !important;
+  }
 }
 </style>

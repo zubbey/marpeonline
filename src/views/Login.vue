@@ -11,7 +11,11 @@
           class="alert alert-danger"
           role="alert"
         >{{ log.message }}</div>
-        <div v-if="log.msgSuccess && !log.message == '' && !log.msgError" class="alert alert-success" role="alert">{{ log.message }}</div>
+        <div
+          v-if="log.msgSuccess && !log.message == '' && !log.msgError"
+          class="alert alert-success"
+          role="alert"
+        >{{ log.message }}</div>
         <span v-if="!log.message">Continue with your Marpe account</span>
       </div>
 
@@ -39,15 +43,14 @@
         />
         <label for="inputPassword">Password</label>
       </div>
-      <router-link to="">
+      <router-link to>
         <span>Forgotten Password?</span>
       </router-link>
       <br />
       <br />
 
       <b-button block variant="primary" type="submit">
-        <b-spinner small type="grow" v-if="log.loading"></b-spinner>
-        Login
+        <b-spinner small type="grow" v-if="log.loading"></b-spinner>Login
       </b-button>
       <router-link to="/register">
         <b-button block variant="outline-dark mt-2">Don't have an account yet?</b-button>
@@ -60,7 +63,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   name: "Header",
   components: {},
@@ -68,50 +71,120 @@ export default {
     return {
       email: "",
       password: "",
-      date: new Date().getUTCFullYear()
+      date: new Date().getUTCFullYear(),
     };
   },
-  
+  mounted() {
+    // alert('Cart: ' + this.cart);
+  },
   computed: {
-    ...mapState(["user", "log"])
+    ...mapState(["user", "log", "toast", "cart"]),
   },
   methods: {
+    ...mapActions(["addToCart"]),
     login() {
+      // $bvToast.show('loginToast');
       this.$store
         .dispatch("loginUser", { email: this.email, password: this.password })
-        .then(success => {
+        .then((success) => {
           localStorage.setItem("accessToken", success.accessToken);
 
           this.$store
             .dispatch("Authenticate_User", success.accessToken)
-            .then(data => {
+            .then((data) => {
               const payload = {
                 message: "Login was successfully",
-                user: data[0]
+                user: data[0],
               };
               this.$store.commit("SUCCESS", payload);
+              this.makeToast("success", this.toast.message, true);
               localStorage.setItem("isAuthorized", true);
             })
             .then(() => {
+              //check if user has item in cart
+              // if (this.cart > 0) {
+                //add items in cart
+                for (const item of this.cart) {
+                  this.addToCart({
+                    product: item.product,
+                    qty: item.qty,
+                    totalprice: item.totalprice,
+                    user: {
+                      _id: this.$store.state.user._id,
+                      email: this.$store.state.user.email,
+                      name: this.$store.getters.fullname,
+                    },
+                  });
+                }
+              // }
               // get user orders
-              this.$store.dispatch("getOrders", success.accessToken)
-              .then(data => {
-                this.$store.commit("SET_ORDERS", data);
-              })
+              this.$store
+                .dispatch("getOrders", success.accessToken)
+                .then((data) => {
+                  this.$store.commit("SET_ORDERS", data);
+                });
             })
             .then(() => {
               this.$store.commit("RESET");
-              this.$router.push(this.$route.query.redirect || '/')
+              this.$router.push(this.$route.query.redirect || "/");
             })
-            .catch(error =>
-              this.$store.commit("logServerErr", error.response.data.message)
-            );
+            .catch((error) => {
+              this.$store.commit("logServerErr", error.response.data.message);
+              this.makeToast("danger", this.toast.message, true);
+            });
         })
-        .catch(error =>
-          this.$store.commit("logServerErr", error.response.data.message)
-        );
-    }
-  }
+        .catch((error) => {
+          this.$store.commit("logServerErr", error.response.data.message);
+          this.makeToast("danger", this.toast.message, true);
+        });
+    },
+
+    makeToast(variant = null, msg, append = false) {
+      let color = "";
+      switch (variant) {
+        case "success":
+          color = "#a0e689";
+          break;
+        case "danger":
+          color = "#ff5555";
+          break;
+        case "warning":
+          color = "#f3c744";
+          break;
+
+        default:
+          color = "#649aff";
+          break;
+      }
+      // Create the title
+      const h = this.$createElement;
+      const template = h(
+        "div",
+        { class: ["d-flex", "flex-grow-1", "align-items-baseline"] },
+        [
+          h("b-img", {
+            class: "mr-2",
+            style: `background-color: ${color}; width: 12px; height: 12px;`,
+          }),
+          h("strong", { class: "mr-auto" }, "Notice!"),
+          h(
+            "small",
+            { class: "text-muted mr-2" },
+            `${new Date().getSeconds()} seconds ago`
+          ),
+        ]
+      );
+      this.toastCount++;
+      this.$bvToast.toast(msg, {
+        title: template,
+        variant: variant,
+        solid: true,
+        toaster: "b-toaster-top-right",
+        autoHideDelay: 8000,
+        appendToast: append,
+      });
+    },
+  },
 };
 </script>
 

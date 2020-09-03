@@ -1,4 +1,5 @@
 export default {
+    re_render: false,
     settings: {},
     categories: [],
     productsInNigeria: [],
@@ -30,5 +31,6 @@ export default {
         name: 'Nigeria',
         locale: 'en-NG',
         currency: 'NGN'
-    }
+    },
+    d_to_n: false
 }

@@ -20,109 +20,75 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav navbar-sidenav pt-3" id="exampleAccordion">
           <li class="nav-item py-0" data-toggle="tooltip" data-placement="right" title="Dashboard">
-          <router-link :to="`/user/${user.slug}/overview`" class="nav-link">
-              <b-icon icon="grid1x2"></b-icon> <span class="nav-link-text"> Overview</span>
-          </router-link>
+            <router-link :to="`/user/${user.slug}/overview`" class="nav-link">
+              <b-icon icon="grid1x2"></b-icon>
+              <span class="nav-link-text"> Overview</span>
+            </router-link>
           </li>
 
           <li class="nav-item py-0" data-toggle="tooltip" data-placement="right" title="Referral">
-          <router-link :to="`/user/${user.slug}/referral`" class="nav-link">
-              <b-icon icon="person-plus"></b-icon> <span class="nav-link-text"> Affiliate/Referral Program</span>
-          </router-link>
+            <router-link :to="`/user/${user.slug}/referral`" class="nav-link">
+              <b-icon icon="person-plus"></b-icon>
+              <span class="nav-link-text"> Affiliate/Referral Program</span>
+            </router-link>
           </li>
           <li class="nav-item py-0" data-toggle="tooltip" data-placement="right" title="Wallet">
-          <router-link :to="`/user/${user.slug}/wallet`" class="nav-link">
-              <b-icon icon="credit-card"></b-icon> <span class="nav-link-text"> My Wallet <b-badge variant="primary"> New</b-badge></span>
-          </router-link>
+            <router-link :to="`/user/${user.slug}/wallet`" class="nav-link">
+              <b-icon icon="credit-card"></b-icon>
+              <span class="nav-link-text">
+                My Wallet
+                <b-badge variant="primary"> New</b-badge>
+              </span>
+            </router-link>
           </li>
 
           <router-link :to="`/user/${user.slug}/orders/domestic`">
-          <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Orders">
-            <a
-              class="nav-link nav-link-collapse collapsed"
-              data-toggle="collapse"
-              href="#collapseComponents"
-              data-parent="#exampleAccordion"
-            >
-              <b-icon icon="cart3"></b-icon> <span class="nav-link-text"> Order Placement</span>
-            </a>
-            <ul class="sidenav-second-level collapse" id="collapseComponents">
-              <li class="nav-link">
-                <router-link to="domestic">Domestic Order</router-link>
-              </li>
-              <li class="nav-link">
-                <router-link to="onlypurchesed">Only Purchase Order</router-link>
-              </li>
-              <li class="nav-link">
-                <router-link to="onlyshipping">Only Shipping Order</router-link>
-              </li>
-              <li class="nav-link">
-                <router-link to="purchaseshipping">Purchase And Shipping</router-link>
-              </li>
-            </ul>
-          </li>
+            <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Orders">
+              <a
+                class="nav-link nav-link-collapse collapsed"
+                data-toggle="collapse"
+                href="#orders"
+                data-parent="#exampleAccordion"
+              >
+                <b-icon icon="cart3"></b-icon>
+                <span class="nav-link-text">Order Placement</span>
+              </a>
+              <ul class="sidenav-second-level collapse" id="orders">
+                <li class="nav-link">
+                  <router-link to="domestic">Domestic Order</router-link>
+                </li>
+                <li class="nav-link">
+                  <router-link to="onlypurchesed">Only Purchase Order</router-link>
+                </li>
+                <li class="nav-link">
+                  <router-link to="onlyshipping">Only Shipping Order</router-link>
+                </li>
+                <li class="nav-link">
+                  <router-link to="purchaseshipping">Purchase And Shipping</router-link>
+                </li>
+              </ul>
+            </li>
           </router-link>
-          <router-link :to="`/user/${user.slug}/account_history`">
-          <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Account History">
-            <a
-              class="nav-link nav-link-collapse collapsed"
-              data-toggle="collapse"
-              href="#collapseExamplePages"
-              data-parent="#exampleAccordion"
-            >
-              <b-icon icon="clock-history"></b-icon> <span class="nav-link-text"> Account History</span>
-            </a>
-            <ul class="sidenav-second-level collapse" id="collapseExamplePages">
-              <li class="nav-link">
-                <a href="#">1688 Order History</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Account Summary</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Order History</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Shipping History</a>
-              </li>
-            </ul>
+          <li class="nav-item py-0" data-toggle="tooltip" data-placement="right" title="Wallet">
+            <router-link :to="`/user/${user.slug}/account_history`" class="nav-link">
+              <b-icon icon="clock-history"></b-icon>
+              <span class="nav-link-text">
+                Account History
+              </span>
+            </router-link>
           </li>
-          </router-link>
-          <router-link :to="`/user/${user.slug}/settings`">
-          <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Account Settings">
-            <a
-              class="nav-link nav-link-collapse collapsed"
-              data-toggle="collapse"
-              href="#collapseMulti"
-              data-parent="#exampleAccordion"
-            >
-              <b-icon icon="gear"></b-icon> <span class="nav-link-text"> Account Setting</span>
-            </a>
-            <ul class="sidenav-second-level collapse" id="collapseMulti">
-              <li class="nav-link">
-                <a href="#">Create/view ticket</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Email us</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">My china address</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Rate Marpe Services</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Shipping Address book</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">View Profile</a>
-              </li>
-            </ul>
+          <li class="nav-item py-0" data-toggle="tooltip" data-placement="right" title="Wallet">
+            <router-link :to="`/user/${user.slug}/settings`" class="nav-link">
+              <b-icon icon="gear"></b-icon>
+              <span class="nav-link-text">
+                Account Setting
+              </span>
+            </router-link>
           </li>
-          </router-link>
           <li class="nav-item py-0" data-toggle="tooltip" data-placement="right" title="Logout">
             <a class="nav-link" @click.prevent="logout">
-              <b-icon icon="power"></b-icon> <span class="nav-link-text"> Logout</span>
+              <b-icon icon="power"></b-icon>
+              <span class="nav-link-text">Logout</span>
             </a>
           </li>
         </ul>
@@ -150,7 +116,7 @@
                 <span
                   class="badge badge-pill badge-primary"
                   v-if="cart.length  > 0"
-                >{{ cart.length  }}</span>
+                >{{ cart.length }}</span>
               </span>
               <!-- if cart is empty -->
               <span v-if="cart.length == 0" class="indicator text-primaey d-none d-lg-block">
@@ -167,22 +133,20 @@
                     style="width: 380px"
                   >
                     <span class="text-dark">
-                      <strong style="white-space: normal">
-                        {{item.product.name }}
-                      </strong>
+                      <strong style="white-space: normal">{{item.product.name }}</strong>
                     </span>
                     <div class="d-flex justify-content-between my-2">
                       <span class="text-primary">
                         Price:
                         <strong>{{ item.product.price | toCurrency }}</strong>
-                        <div class="text-muted">Qantity: <strong>{{ item.qty }}</strong></div>
+                        <div class="text-muted">
+                          Qantity:
+                          <strong>{{ item.qty }}</strong>
+                        </div>
                       </span>
-                      <b-icon
-                      icon="x"
-                      @click.prevent="removeCartItem(item.product)"
-                    >remove</b-icon>
+                      <b-icon icon="x" @click.prevent="removeCartItem(item.product)">remove</b-icon>
                     </div>
-                    
+
                     <hr />
                   </router-link>
                 </div>
@@ -229,7 +193,10 @@
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" ><b-icon icon="person"></b-icon><strong>{{ user.firstname }}</strong></a>
+            <a class="nav-link">
+              <b-icon icon="person"></b-icon>
+              <strong>{{ user.firstname }}</strong>
+            </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click.prevent="logout">
@@ -245,33 +212,37 @@
 </template>
 
 <script>
-import { mdbIcon } from 'mdbvue';
+import { mdbIcon } from "mdbvue";
 import { mapActions } from "vuex";
 export default {
   props: ["user", "log", "cart"],
   components: {
-    mdbIcon
+    mdbIcon,
   },
   methods: {
     ...mapActions(["removeCartItem"]),
 
     logout() {
       this.$store.dispatch("logoutUser").then(() => {
-          localStorage.removeItem('isAuthorized');
-          localStorage.removeItem('accessToken');
-          location.reload();
+        localStorage.removeItem("isAuthorized");
+        localStorage.removeItem("accessToken");
+        location.reload();
         // this.$router.push("/");
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scope>
-ul#exampleAccordion {
-    overflow: scroll;
+body.fixed-nav{
+  padding: 0 !important;
 }
+ul#exampleAccordion {
+  overflow: scroll;
+}
+
 .navbar .dropdown-menu {
-    position: absolute !important;
+  position: absolute !important;
 }
 </style>

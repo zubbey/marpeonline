@@ -8,7 +8,10 @@ export default {
         return Api.post('cart/', data);
     },
     updateCart(product, data){
-        return Api.patch(`cart/${product}`, data);
+        return Api.patch(`cart/${product}`, data); // remove this
+    },
+    updateProductQty(cartId, action){
+        return Api.patch(`cart/${cartId}/?q=${action}`);
     },
     delete(product){
         return Api.delete(`cart/${product}`);

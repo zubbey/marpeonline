@@ -75,17 +75,17 @@ export default {
       this.$store
         .dispatch("loginAdmin", { email: this.email, password: this.password })
         .then(success => {
-          localStorage.setItem("accessToken", success.accessToken);
+          localStorage.setItem("adminAccessToken", success.accessToken);
 
           this.$store
             .dispatch("Authenticate_Admin", success.accessToken)
             .then(data => {
               this.$store.commit("SUCCESS_ADMIN", data[0]);
-              localStorage.setItem("isAuthorized", true);
+              localStorage.setItem("isAdminAuthorized", true);
             })
             .then(() => {
               
-              this.$store.dispatch("getAllData", {accessToken: localStorage.getItem('accessToken')})
+              this.$store.dispatch("getAllData", {accessToken: localStorage.getItem('adminAccessToken')})
               .then(data => {
                 this.$store.commit('SET_ADMIN_DATA', data)
               })

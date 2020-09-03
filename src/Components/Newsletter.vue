@@ -2,7 +2,6 @@
   <section class="newsletter-area">
     <div class="container">
       <div class="row justify-content-between">
-
         <!-- Newsletter Text -->
         <div class="col-12 col-lg-6">
           <div class="newsletter-text">
@@ -11,17 +10,16 @@
           </div>
           <div class="newsletter-form">
             <form>
-              <input class="nl-email" placeholder="Your E-mail">
-              <b-button variant="primary" @click.prevent="haSubmit"><b-icon icon="envelope"></b-icon> Submit</b-button>
+              <input class="nl-email" placeholder="Your E-mail" />
+              <b-button variant="primary" @click.prevent="haSubmit">
+                <b-icon icon="envelope"></b-icon>Submit
+              </b-button>
             </form>
           </div>
         </div>
 
         <!-- Newsletter Form -->
-        <div class="col-12 col-lg-4">
-          
-        </div>
-
+        <div class="col-12 col-lg-4"></div>
       </div>
     </div>
   </section>
@@ -29,27 +27,40 @@
 
 <script>
 export default {
-  name: 'Newsletter',
+  name: "Newsletter",
   methods: {
     haSubmit() {
-      return alert('Thank you for subscribing')
-    }
-  }
-}
+      return alert("Thank you for subscribing");
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 .newsletter-area {
   position: relative;
   z-index: 1;
   background-color: #c5eafa;
-  background-image: url('~@/assets/newsletter.svg');
+  background-image: url("~@/assets/newsletter.svg");
   background-position: right;
   background-repeat: no-repeat;
   padding: 75px;
 }
-
+@media (min-width:320px){
+  .newsletter-area {
+    background-image: none !important;
+  }
+}
+@media only screen and (min-device-width: 480px) {
+  .newsletter-area {
+    background-image: none !important;
+  }
+}
+@media only screen and (min-device-width: 768px) {
+  .newsletter-area {
+    background-image: none !important;
+  }
+}
 .newsletter-area .newsletter-text {
   position: relative;
   z-index: 1;
@@ -104,7 +115,8 @@ export default {
   box-shadow: 0 8px 6px 0 rgba(0, 0, 0, 0.1), 0 16px 70px 0 rgba(0, 0, 0, 0.69);
 }
 
-.newsletter-area .newsletter-form .input-button:hover, .newsletter-area .newsletter-form .input-button:focus {
+.newsletter-area .newsletter-form .input-button:hover,
+.newsletter-area .newsletter-form .input-button:focus {
   background-color: inherit;
   color: black;
 }

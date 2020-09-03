@@ -21,7 +21,7 @@
             <div class="footer-title">Collection</div>
             <ul class="list-unstyled">
               <router-link to="#"><li>Products Available in Our Nigerian Warehouse</li></router-link>
-              <router-link to="#"><li>Featured Products from 1688</li></router-link>
+              <router-link to="#"><li>Products On Preorders</li></router-link>
             </ul>
           </div>
         </div>
@@ -30,7 +30,7 @@
           <div class="footer-widget">
             <div class="footer-title">Catagories</div>
             <ul class="list-unstyled" v-for="category in slicedCat" :key="category._id">
-              <router-link to="#"><li>{{ category.categoryName }}</li></router-link>
+              <router-link :to="{name: 'Category', params: {id: category.categoryName}}"><li>{{ category.categoryName }}</li></router-link>
             </ul>
           </div>
         </div>
@@ -54,10 +54,15 @@
         <div class="col-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 text-right">
           <div class="social-info">
             <strong>Get social</strong>
-            <a class="p-1" href="https://www.facebook.com/marpe.online/" target="_blank"><mdb-icon fab icon="facebook-square" size="lg" /></a>
-            <a class="p-1" href="https://twitter.com/onlinemarpe" target="_blank"><mdb-icon fab icon="twitter-square" size="lg" /></a>
-            <a class="p-1" href="https://www.linkedin.com/company/marpe-online-limited" target="_blank"><mdb-icon fab icon="linkedin" size="lg" /></a>
-            <a class="p-1" href="https://www.instagram.com/marpe.online/" target="_blank"><mdb-icon fab icon="instagram" size="lg" /></a>
+            <a
+              v-for="(social, index) in socials"
+              :key="index"
+              class="p-1"
+              target="_blank"
+              :href="social.link"
+            >
+            <mdb-icon fab :icon="social.icon" size="lg" />
+            </a>
           </div>
         </div>
       </div>
@@ -67,7 +72,7 @@
 
 <script>
 import { mdbIcon } from 'mdbvue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'Footer',
@@ -75,7 +80,16 @@ export default {
   components: {
     mdbIcon
   },
+  data(){
+    return {
+      socials: []
+    }
+  },
+  mounted(){
+    this.socials = this.settings.socials;
+  },
   computed: {
+    ...mapState(['settings']),
     ...mapGetters(['slicedCat'])
   }
 }

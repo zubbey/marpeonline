@@ -18,88 +18,94 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
           <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Dashboard">
-          <router-link :to="`/admin/${user.slug}/overview`" class="nav-link">
-                <b-icon icon="grid1x2"></b-icon><span class="nav-link-text"> Overview</span>
-          </router-link>
+            <router-link :to="`/admin/${user.slug}/overview`" class="nav-link">
+              <b-icon icon="grid1x2"></b-icon>
+              <span class="nav-link-text">Overview</span>
+            </router-link>
           </li>
 
           <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Referral">
-          <router-link :to="`/admin/${user.slug}/users`" class="nav-link">
-              <b-icon icon="person-plus"></b-icon><span class="nav-link-text"> User Management</span>
-          </router-link>
+            <router-link :to="`/admin/${user.slug}/users`" class="nav-link">
+              <b-icon icon="person-plus"></b-icon>
+              <span class="nav-link-text">User Management</span>
+            </router-link>
           </li>
 
           <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Referral">
-          <router-link :to="`/admin/${user.slug}/products`" class="nav-link">
-              <b-icon icon="person-plus"></b-icon><span class="nav-link-text"> Products</span>
-          </router-link>
+            <router-link :to="`/admin/${user.slug}/products`" class="nav-link">
+              <b-icon icon="person-plus"></b-icon>
+              <span class="nav-link-text">Products</span>
+            </router-link>
+          </li>
+
+          <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Referral">
+            <router-link :to="`/admin/${user.slug}/categories`" class="nav-link">
+              <b-icon icon="person-plus"></b-icon>
+              <span class="nav-link-text">Category</span>
+            </router-link>
           </li>
 
           <router-link :to="`/admin/${user.slug}/orders`">
-          <li class="nav-item py-2" data-toggle="tooltip" data-placement="right" title="Orders">
-            <a
-              class="nav-link nav-link-collapse collapsed"
-              data-toggle="collapse"
-              href="#collapseComponents"
-              data-parent="#exampleAccordion"
-            >
-              <b-icon icon="cart3"></b-icon><span class="nav-link-text"> Order Management</span>
-            </a>
-            <ul class="sidenav-second-level collapse" id="collapseComponents">
-              <li class="nav-link">
-                <a href="#">Request Management</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Only Purchase Order</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Only Shipping Order</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Purchase And Shipping</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Shipping Checkout</a>
-              </li>
-            </ul>
-          </li>
+            <li class="nav-item py-2" data-toggle="tooltip" data-placement="right" title="Orders">
+              <a
+                class="nav-link nav-link-collapse collapsed"
+                data-toggle="collapse"
+                href="#collapseComponents"
+                data-parent="#exampleAccordion"
+              >
+                <b-icon icon="cart3"></b-icon>
+                <span class="nav-link-text">Order Management</span>
+              </a>
+              <ul class="sidenav-second-level collapse" id="collapseComponents">
+                <!-- <li class="nav-link">
+                  <a href="#">Request Management</a>
+                </li>
+                <li class="nav-link">
+                  <a href="#">Only Purchase Order</a>
+                </li>
+                <li class="nav-link">
+                  <a href="#">Only Shipping Order</a>
+                </li>
+                <li class="nav-link">
+                  <a href="#">Purchase And Shipping</a>
+                </li>
+                <li class="nav-link">
+                  <a href="#">Shipping Checkout</a>
+                </li> -->
+              </ul>
+            </li>
           </router-link>
-          
-          <router-link :to="`/admin/${user.slug}/settings`">
-          <li class="nav-item py-2" data-toggle="tooltip" data-placement="right" title="Account Settings">
-            <a
-              class="nav-link nav-link-collapse collapsed"
-              data-toggle="collapse"
-              href="#collapseMulti"
-              data-parent="#exampleAccordion"
-            >
-              <b-icon icon="gear"></b-icon><span class="nav-link-text"> Account Setting</span>
-            </a>
-            <ul class="sidenav-second-level collapse" id="collapseMulti">
-              <li class="nav-link">
-                <a href="#">Create/view ticket</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Email us</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">My china address</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Rate Marpe Services</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">Shipping Address book</a>
-              </li>
-              <li class="nav-link">
-                <a href="#">View Profile</a>
-              </li>
-            </ul>
-          </li>
+          <router-link :to="`/admin/${user.slug}/admin_settings/general_settings`">
+            <li class="nav-item py-2" data-toggle="tooltip" data-placement="right" title="Settings">
+              <a
+                class="nav-link nav-link-collapse collapsed"
+                data-toggle="collapse"
+                href="#settings"
+                data-parent="#exampleAccordion"
+              >
+                <b-icon icon="cart3"></b-icon>
+                <span class="nav-link-text">Settings</span>
+              </a>
+              <ul class="sidenav-second-level collapse" id="settings">
+                <li class="nav-link">
+                  <router-link to="general_settings">General Settings</router-link>
+                </li>
+                <li class="nav-link">
+                  <router-link to="home_settings">Home Settings</router-link>
+                </li>
+                <li class="nav-link">
+                  <router-link to="pages_settings">Pages Settings</router-link>
+                </li>
+                <li class="nav-link">
+                  <router-link to="admin_account_settings">Account Settings</router-link>
+                </li>
+              </ul>
+            </li>
           </router-link>
           <li class="nav-item py-1" data-toggle="tooltip" data-placement="right" title="Logout">
             <a class="nav-link" @click.prevent="logout">
-              <b-icon icon="power"></b-icon><span class="nav-link-text"> Logout</span>
+              <b-icon icon="power"></b-icon>
+              <span class="nav-link-text">Logout</span>
             </a>
           </li>
         </ul>
@@ -149,7 +155,10 @@
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" ><b-icon icon="person"></b-icon><strong> {{ fullname ? user.email : '' }}</strong></a>
+            <a class="nav-link">
+              <b-icon icon="person"></b-icon>
+              <strong>{{ fullname ? user.email : '' }}</strong>
+            </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click.prevent="logout">
@@ -169,37 +178,36 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   props: ["id", "user", "log", "cart"],
   computed: {
-    ...mapGetters(["fullname"])
+    ...mapGetters(["fullname"]),
   },
-  mounted(){
-  },
+  mounted() {},
   methods: {
     ...mapActions(["removeCartItem"]),
 
     logout() {
       this.$store.dispatch("logoutUser").then(() => {
-          localStorage.removeItem('isAuthorized');
-          localStorage.removeItem('accessToken');
-          window.location.reload();
+        localStorage.removeItem("isAdminAuthorized");
+        localStorage.removeItem("adminAccessToken");
+        window.location.reload();
         // this.$router.push("/");
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scope>
+#mainNav.fixed-top .navbar-sidenav{
+  background-color: white;
+}
+body.fixed-nav{
+  padding: 0 !important;
+}
 ul#exampleAccordion {
-    overflow: scroll;
+  overflow: scroll;
 }
-.badge-dark {
-    color: #3b3f43;
-    background-color: #343a401f;
-}
-#mainNav .navbar-collapse .navbar-sidenav .sidenav-second-level > li > a{
-  color: #ffe7e7 !important;
-}
+
 .navbar .dropdown-menu {
-    position: absolute !important;
+  position: absolute !important;
 }
 </style>

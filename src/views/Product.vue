@@ -4,7 +4,7 @@
   <div class="container py-5" style="padding-top:70px;">
     <InfoBreadcrumb v-for="item in product" :key="item._id" :item="item"/>
     <InfoBox :product="product"/>
-    <InfoText :product="product"/>
+    <InfoText v-for="(item, index) in product" :key="index" :desc="item.desc"/>
   </div>
   <Newsletter/>
   <Footer/>

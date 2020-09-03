@@ -186,11 +186,11 @@ export default {
   created() {
     this.$store.watch(
       (state) => {
-        console.clear(state);
+        console.log(state);
         return this.$store.state.transaction; // could also put a Getter here
       },
       (newTrans, oldTrans) => {
-        console.clear(oldTrans);
+        console.log(oldTrans);
         //something changed do something
         if (newTrans === "success") {
           this.stopTransactionCheck();
@@ -240,7 +240,7 @@ export default {
       this.currency = this.currencyType.currency;
     }
 
-    this.fee = this.settings.commitions.purchase;
+    this.fee = this.settings.commission.procurementfee;
     this.data.useremail = this.user.email;
   },
   computed: {

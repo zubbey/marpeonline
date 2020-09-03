@@ -183,7 +183,7 @@ export default {
   },
   data() {
     return {
-      baseURL: 'http://localhost:5000',
+      baseURL: 'http://ec2-34-202-157-59.compute-1.amazonaws.com:5000',
       fileName: '',
       fee: null,
       authorization_url: null,
@@ -240,11 +240,11 @@ export default {
   created() {
     this.$store.watch(
       (state) => {
-        console.clear(state);
+        console.log(state);
         return this.$store.state.transaction; // could also put a Getter here
       },
       (newTrans, oldTrans) => {
-        console.clear(oldTrans);
+        console.log(oldTrans);
         //something changed do something
         if (newTrans === "success") {
           this.stopTransactionCheck();
@@ -288,7 +288,7 @@ export default {
       this.currency = this.currencyType.currency;
     }
 
-    this.fee = this.settings.commitions.purchase;
+    this.fee = this.settings.commission.procurementfee;
     this.options = this.settings.productwebsites;
     this.data.useremail = this.user.email;
   },

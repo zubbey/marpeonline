@@ -1,14 +1,11 @@
 <template>
   <div class="content-wrapper" ref="contentWrapper">
     <b-container fluid>
-      <Breadcrumb name="account_history" :id="user.slug" />
-    </b-container>
+      <Breadcrumb :items="items" :id="user.slug" />
 
+      <b-card title="COMING SOON!" sub-title="work in progress" class="text-center py-5"></b-card>
+    </b-container>
     <Footer />
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fa fa-angle-up"></i>
-    </a>
   </div>
 </template>
 
@@ -17,10 +14,10 @@ import Breadcrumb from "@/Components/userPage/Breadcrumb.vue";
 import Footer from "@/Components/userPage/UserFooter.vue";
 import { mapState } from "vuex";
 export default {
-  name: "account_history",
+  name: "account-history",
   components: {
     Breadcrumb,
-    Footer
+    Footer,
   },
   data() {
     return {
@@ -31,14 +28,15 @@ export default {
         },
         {
           text: "Account History",
-          href: "/user/" + this.id + "/account_history"
+          href: "/user/" + this.id + "/account-history"
         }
-      ]
+      ],
     };
   },
   computed: {
-    ...mapState(["log", "user"])
-  }
+    ...mapState(["log", "user"]),
+  },
+  methods: {},
 };
 </script>
 

@@ -53,7 +53,7 @@
                 <content-placeholders v-if="log.loading">
                   <content-placeholders-text :lines="3" />
                 </content-placeholders>
-                <p v-for="category in categories" :key="category._id">
+                <p class="pb-3" v-for="category in categories" :key="category._id">
                   <router-link :to="{name: 'Category', params: {id: category.categoryName}}">
                     {{ category.categoryName }}
                     ({{ category.items }})
@@ -76,7 +76,7 @@
           <div class="col-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 my-4">
             <b-button type="button" @click="incNigCardNumber" variant="outline">More +</b-button>
           </div>
-          <Breadc :label="'Featured Products from 1688'" />
+          <Breadc :label="'Products On Preorders'" />
           <div
             v-if="this.productsIn1688 == 0"
             class="col-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 card-section"

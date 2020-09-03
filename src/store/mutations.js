@@ -1,3 +1,13 @@
+// re-render vue dom
+export const RE_RENDER = (state) => {
+    state.re_render = true;
+}
+
+export const RENDER_RESET = (state) => {
+    if(state.re_render)
+        state.re_render = false;
+}
+
 export const LOADING = (state) => {
     state.log.loading = true;
 }
@@ -16,6 +26,10 @@ export const SET_SETTINGS = (state, settings) => {
 }
 export const CHANGE_CURRENCY = (state, newCurrency) => {
     state.currencyType = newCurrency[0]
+}
+
+export const UPDATE_D_TO_N = (state, value) => {
+    state.d_to_n = value
 }
 // Set Nigeria products
 export const SET_NIGERIA_PRODUCTS = (state, products) => {
@@ -42,17 +56,32 @@ export const SET_CATEGORIES = (state, categories) => {
     state.categories = categories;
 }
 // Set add to cart
-export const ADD_TO_CART = (state, {product, qty}) => {
+export const ADD_TO_CART = (state, data) => {
     state.toast.status = 'success';
     state.toast.message = 'item is added to cart!';
     let productInCart = state.cart.find(item => {
-        return item.product._id === product._id;
+        return item.product._id === data.product._id;
     });
     if(productInCart){
-        productInCart.qty += qty;
+        productInCart.qty += data.qty;
         return;
     }
-    state.cart.push({product, qty});
+    state.cart.push(data);
+}
+// increase item qty
+export const INC = (state, productId) => {
+    let cartItem = state.cart.filter(item => item.product._id === productId);
+    cartItem[0].qty ++;
+    state.toast.status = 'success';
+    state.toast.message = 'item quantity has been increased!';
+}
+
+// decrease item qty
+export const DEC = (state, productId) => {
+    let cartItem = state.cart.filter(item => item.product._id === productId);
+    cartItem[0].qty --;
+    state.toast.status = 'success';
+    state.toast.message = 'item quantity has been decreased!';
 }
 
 // Set cart product from cart
@@ -136,18 +165,21 @@ export const AUTH_INIT = (state) => {
 }
 
 export const logWrongPassword = (state, msg) => {
-    state.log.msgError = true;
-    state.log.message = msg;
+    state.toast.status = 'danger';
+    state.toast.message = msg;
+    state.log.msgError = true; 
 }
 
 export const logServerErr = (state, errorMsg) => {
+    state.toast.status = 'danger';
+    state.toast.message = errorMsg;
     state.log.loading = false;
     state.log.msgError = true;
-    state.log.message = errorMsg;
 }
-export const forbiden = (state) => {
+export const FORBIDDEN = (state) => {
     state.log.msgError = true;
-    state.log.message = 'Sorry you\'re restricted';
+    state.toast.status = 'success';
+    state.toast.message = 'Sorry you\'re restricted';
 }
 
 export const RESET = (state) => {
@@ -166,10 +198,20 @@ export const SUCCESS = (state, payload) => {
 
     if(payload.user){
         state.user = payload.user;
-        state.log.message = payload.message;
         state.log.isUserActive = true;
+        if(!localStorage.getItem('isAuthorized'))
+            state.toast.status = 'success';
+            state.toast.message = payload.message;
     }
 }
+// ADMIN CREATED USERS
+export const USER_CREATED = (state) => {
+    state.log.loading = false;
+    state.log.msgError = false;
+    state.toast.status = 'success';
+    state.toast.message = 'New user added successfully!';
+}
+
 // ADMIN SUCCESS LOGIN
 export const SUCCESS_ADMIN = (state, payload) => {
     // reset msg
@@ -181,6 +223,8 @@ export const SUCCESS_ADMIN = (state, payload) => {
     state.user = payload;
     state.log.isUserActive = true;
     state.log.isAdmin = true;
+    state.toast.status = 'success';
+    state.toast.message = 'Access Granted Successfully!';
 
 }
 
@@ -188,7 +232,8 @@ export const SAVED = (state, msg) =>{
     state.log.loading = false;
     state.log.msgError = false;
     state.log.msgSuccess = true;
-    state.log.message = msg;
+    state.toast.status = 'success';
+    state.toast.message = msg;
 }
 
 // reset logged in user
@@ -210,4 +255,25 @@ export const UPDATE_SHIPMENT_ORDER = (state, data) => {
     state.adminData.orders = data;
     state.toast.status = 'success';
     state.toast.message = 'shipment updated successfully!';
+}
+// add new category
+export const NEW_CATEGORY_CREATED = (state, category) => {
+    state.adminData.category.unshift(category);
+    state.toast.status = 'success';
+    state.toast.message = 'new category added!';
+}
+// delete category
+export const CATEGORY_DELETED = (state, id) => {
+    state.adminData.category = state.adminData.category.filter(cat => cat._id != id);
+    state.toast.status = 'success';
+    state.toast.message = 'category deleted!';
+}
+// add new product
+export const ADD_NEW_PRODUCT = (state, product) => {
+    state.adminData.products.unshift(product)
+}
+// update products
+export const UPDATE_PRODUCTS = (state, payload) => {
+    if(payload.products)
+        state.adminData.products = payload.products
 }

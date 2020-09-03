@@ -35,7 +35,14 @@ const Adminoverview = () => import('@/views/Adminoverview.vue');
 const Adminusers = () => import('@/views/Adminusers.vue');
 const Adminorders = () => import('@/views/Adminorders.vue');
 const Adminproducts = () => import('@/views/Adminproducts.vue');
-const Adminregister = () => import('@/views/Adminregister.vue');
+const Admincategory = () => import('@/views/Admincategory.vue');
+// admin settings
+const AdminSettings = () => import('@/views/AdminSettings.vue');
+const GeneralSettings = () => import('@/views/GeneralSettings.vue');
+const HomeSettings = () => import('@/views/HomeSettings.vue');
+const PagesSettings = () => import('@/views/PagesSettings.vue');
+const AdminAccountSettings = () => import('@/views/AdminAccountSettings.vue');
+// const Adminregister = () => import('@/views/Adminregister.vue');
 const Adminlogin = () => import('@/views/Adminlogin.vue');
 
 Vue.use(Router)
@@ -140,7 +147,7 @@ const router = new Router({
     {
       path: '/admin/:id',
       name: 'Admin',
-      beforeEnter: routeAuth,
+      beforeEnter: routeAdminAuth,
       component: Admin,
       meta: { title: 'Dashboard'},
       props: true,
@@ -168,7 +175,45 @@ const router = new Router({
           path: 'products',
           component: Adminproducts,
           meta: { title: 'All Products', requiresAuth: true }
-        }
+        },
+        {
+          name: 'categories',
+          path: 'categories',
+          component: Admincategory,
+          meta: { title: 'All Categories', requiresAuth: true }
+        },
+        {
+          path: 'admin_settings',
+          name: 'admin_settings',
+          component: AdminSettings,
+          meta: { title: 'Admin Settings', requiresAuth: true },
+          children: [
+            {
+              name: 'general_settings',
+              path: 'general_settings',
+              component: GeneralSettings,
+              meta: { title: 'General Settings', requiresAuth: true }
+            },
+            {
+              name: 'home_settings',
+              path: 'home_settings',
+              component: HomeSettings,
+              meta: { title: 'Home Settings', requiresAuth: true }
+            },
+            {
+              name: 'pages_settings',
+              path: 'pages_settings',
+              component: PagesSettings,
+              meta: { title: 'Pages Sittings', requiresAuth: true }
+            },
+            {
+              name: 'accountsettings',
+              path: 'admin_account_settings',
+              component: AdminAccountSettings,
+              meta: { title: 'Account Settings', requiresAuth: true }
+            }
+          ]
+        },
       ]
     },
     {
@@ -186,14 +231,8 @@ const router = new Router({
     {
       path: '/adminlogin',
       name: 'Adminlogin',
-      beforeEnter: isAuth,
+      beforeEnter: isAdminAuth,
       component: Adminlogin
-    },
-    {
-      path: '/adminregister',
-      name: 'Adminregister',
-      beforeEnter: isAuth,
-      component: Adminregister
     },
     {
       path: '/checkout',
@@ -237,7 +276,7 @@ const router = new Router({
     },
     {
         path: '*',
-        name: '404',
+        name: 'Notfound',
         component: NotFound
     }
   ],
@@ -248,7 +287,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
-    if (!localStorage.getItem('isAuthorized')) {
+    if (!localStorage.getItem('isAdminAuthorized') && !localStorage.getItem('isAuthorized')) {
       next({
         path: '/login',
         query: { redirect: to.fullPath }
@@ -283,9 +322,26 @@ function routeAuth(to, from, next) {
     next('/login'); // go to '/login';
   }
 }
+function routeAdminAuth(to, from, next) {
+  if (localStorage.getItem('isAdminAuthorized')) {
+    next(); // allow to enter route
+  }
+  else {
+    next('/login'); // go to '/login';
+  }
+}
 
 function isAuth(to, from, next) {
   if (localStorage.getItem('isAuthorized')) {
+    next('/'); // allow to enter route
+  }
+  else {
+    next(); // go to '/login';
+  }
+}
+
+function isAdminAuth(to, from, next) {
+  if (localStorage.getItem('isAdminAuthorized')) {
     next('/'); // allow to enter route
   }
   else {
