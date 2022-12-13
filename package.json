@@ -19,7 +19,7 @@
     "bulma": "^0.9.0",
     "chancejs": "0.0.8",
     "chart.js": "^2.9.3",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "hchs-vue-charts": "^1.2.8",
     "jquery": "^3.5.1",
     "lodash": "^4.17.20",
